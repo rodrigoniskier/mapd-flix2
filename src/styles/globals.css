@@ -1,0 +1,209 @@
+@import 'tailwindcss';
+
+/* ------------------------------------------------------------------ */
+/* Design tokens — MAPD-Flix                                           */
+/* ------------------------------------------------------------------ */
+@theme {
+  --font-display: 'Sora', 'Segoe UI', system-ui, sans-serif;
+  --font-sans: 'Inter', 'Segoe UI', system-ui, -apple-system, sans-serif;
+
+  --color-ink: #07080d;          /* fundo base */
+  --color-panel: #0f1119;        /* superfícies */
+  --color-panel-2: #161a26;      /* superfícies elevadas */
+  --color-line: #262b3b;         /* bordas */
+  --color-mute: #9aa3b8;         /* texto secundário (contraste ≥ 7:1 no fundo) */
+  --color-soft: #c9cfdd;         /* texto corrido */
+  --color-brand: #ff3d5a;        /* acento MAPD (vermelho-coral próprio) */
+  --color-brand-2: #ffb547;      /* acento secundário (âmbar) */
+  --color-ok: #34d399;
+  --color-warn: #fbbf24;
+  --color-bad: #f87171;
+  --color-info: #60a5fa;
+
+  --shadow-card: 0 10px 30px -10px rgb(0 0 0 / 0.7);
+}
+
+@layer base {
+  html {
+    color-scheme: dark;
+    -webkit-text-size-adjust: 100%;
+  }
+  body {
+    background: var(--color-ink);
+    color: var(--color-soft);
+    font-family: var(--font-sans);
+    line-height: 1.6;
+    -webkit-font-smoothing: antialiased;
+  }
+  h1, h2, h3, h4 {
+    font-family: var(--font-display);
+    color: #fff;
+    line-height: 1.2;
+    letter-spacing: -0.01em;
+  }
+  ::selection {
+    background: color-mix(in oklab, var(--color-brand) 45%, transparent);
+  }
+  :focus-visible {
+    outline: 3px solid var(--color-brand-2);
+    outline-offset: 2px;
+    border-radius: 6px;
+  }
+  a {
+    color: inherit;
+  }
+}
+
+@layer components {
+  .container-page {
+    width: 100%;
+    max-width: 1400px;
+    margin-inline: auto;
+    padding-inline: 16px;
+  }
+  @media (min-width: 768px) {
+    .container-page { padding-inline: 32px; }
+  }
+  @media (min-width: 1280px) {
+    .container-page { padding-inline: 48px; }
+  }
+
+  .btn {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.5rem;
+    border-radius: 0.6rem;
+    padding: 0.65rem 1.1rem;
+    font-weight: 600;
+    font-size: 0.95rem;
+    line-height: 1.2;
+    transition: transform 0.15s ease, background-color 0.15s ease, border-color 0.15s ease;
+    min-height: 44px;
+    text-decoration: none;
+    cursor: pointer;
+  }
+  .btn:active { transform: scale(0.98); }
+  .btn-primary { background: #fff; color: #0b0c12; }
+  .btn-primary:hover { background: #e7e9f0; }
+  .btn-brand { background: var(--color-brand); color: #fff; }
+  .btn-brand:hover { background: #ff5872; }
+  .btn-ghost { background: rgb(255 255 255 / 0.08); color: #fff; border: 1px solid rgb(255 255 255 / 0.14); }
+  .btn-ghost:hover { background: rgb(255 255 255 / 0.15); }
+  .btn[disabled], .btn[aria-disabled='true'] { opacity: 0.5; cursor: not-allowed; }
+
+  .chip {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.35rem;
+    border-radius: 999px;
+    padding: 0.2rem 0.65rem;
+    font-size: 0.75rem;
+    font-weight: 600;
+    letter-spacing: 0.02em;
+    background: rgb(255 255 255 / 0.08);
+    color: #e5e7ef;
+  }
+
+  .prose-mapd p { margin-block: 0.75em; }
+  .prose-mapd strong { color: #fff; font-weight: 650; }
+
+  .card-surface {
+    background: var(--color-panel);
+    border: 1px solid var(--color-line);
+    border-radius: 1rem;
+  }
+
+  /* Carrossel horizontal acessível (rolagem nativa + snap; funciona com toque) */
+  .rail {
+    display: flex;
+    gap: 0.9rem;
+    overflow-x: auto;
+    overscroll-behavior-x: contain;
+    scroll-snap-type: x mandatory;
+    scroll-padding-inline: 16px;
+    padding-block: 0.5rem 1.25rem;
+    scrollbar-width: thin;
+    scrollbar-color: #3a4155 transparent;
+  }
+  .rail > * { scroll-snap-align: start; flex: 0 0 auto; }
+
+  .poster-shine {
+    background: linear-gradient(180deg, transparent 35%, rgb(7 8 13 / 0.55) 65%, rgb(7 8 13 / 0.95) 100%);
+  }
+}
+
+/* Movimento reduzido: remove transições e animações não essenciais */
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after {
+    animation-duration: 0.001ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.001ms !important;
+    scroll-behavior: auto !important;
+  }
+}
+
+@keyframes fade-up {
+  from { opacity: 0; transform: translateY(8px); }
+  to { opacity: 1; transform: none; }
+}
+.animate-fade-up { animation: fade-up 0.35s ease both; }
+
+/* Documento de impressão: tema claro também na pré-visualização em tela */
+.print-doc {
+  background: #fff;
+  color: #1c1f26;
+  color-scheme: light;
+}
+.print-doc * {
+  color: inherit !important;
+  background-color: transparent !important;
+  border-color: #d4d6dd !important;
+}
+.print-doc h1, .print-doc h2, .print-doc h3, .print-doc h4, .print-doc h5, .print-doc strong, .print-doc th {
+  color: #000 !important;
+}
+.print-doc .print-muted { color: #555b6b !important; }
+.print-doc table { font-size: 0.85em; }
+.print-doc table th, .print-doc table td { border: 1px solid #d4d6dd !important; }
+
+/* ------------------------------------------------------------------ */
+/* Impressão — A4, fundo branco, sem navegação                         */
+/* ------------------------------------------------------------------ */
+@page {
+  size: A4;
+  margin: 16mm 14mm 18mm;
+}
+
+@media print {
+  html, body {
+    background: #fff !important;
+    color: #111 !important;
+    color-scheme: light;
+  }
+  body * {
+    box-shadow: none !important;
+    text-shadow: none !important;
+  }
+  .no-print, nav, header[data-site-header], footer[data-site-footer], [data-no-print] {
+    display: none !important;
+  }
+  .print-doc {
+    font-size: 10.5pt;
+    line-height: 1.45;
+  }
+  .print-doc h1, .print-doc h2, .print-doc h3, .print-doc h4 {
+    color: #000 !important;
+    break-after: avoid;
+  }
+  .print-doc figure, .print-doc table, .print-doc .avoid-break, .print-doc li {
+    break-inside: avoid;
+  }
+  .print-doc .page-break {
+    break-before: page;
+  }
+  .print-doc a {
+    color: #000 !important;
+    text-decoration: none;
+  }
+}
