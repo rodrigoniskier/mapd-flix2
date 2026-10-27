@@ -75,13 +75,13 @@ function SeriesModal({ id }: { id: string }) {
         {/* cabeçalho com imagem */}
         <div className="relative aspect-[16/10] w-full sm:aspect-video">
           <Photo photo={art.billboard} className="absolute inset-0 h-full w-full" eager />
-          <div className="absolute inset-0 bg-gradient-to-t from-panel via-panel/30 to-transparent" />
+          <div className="absolute inset-0 bg-gradient-to-t from-panel via-black/60 to-black/10" />
           <button type="button" onClick={close} className="icon-btn absolute right-3 top-3 z-10 h-10 w-10 border-0 bg-panel" aria-label="Fechar" data-testid="fechar-modal">
             <Icon name="x" className="h-6 w-6" />
           </button>
           <div className="absolute inset-x-0 bottom-0 px-5 pb-6 sm:px-12 sm:pb-10">
-            <div className="flex items-center gap-2 text-sm font-bold uppercase tracking-[0.3em] text-white/85">
-              <span className="font-title text-xl tracking-wider text-brand">MAPD</span> Série
+            <div className="flex items-center gap-2 text-sm font-bold uppercase tracking-[0.3em] text-white">
+              <span className="rounded-[2px] bg-brand px-1 pb-px pt-[3px] font-title text-base leading-none tracking-wider text-white">MAPD</span> Série
             </div>
             <h1 id="titulo-serie" className="font-title text-[clamp(3rem,11vw,6rem)] leading-[0.9] tracking-wide text-white drop-shadow-lg [overflow-wrap:anywhere]">
               {s.title}
@@ -229,6 +229,7 @@ function SeriesModal({ id }: { id: string }) {
               <a key={o.id} href={href.series(o.id)} className="overflow-hidden rounded bg-[#2f2f2f] hover:bg-[#3a3a3a]">
                 <span className="relative block aspect-video">
                   <Photo photo={seriesArt[o.id].billboard} className="h-full w-full" decorative />
+                  <span className="absolute inset-0 bg-gradient-to-t from-black/90 via-black/40 to-transparent" />
                   <span className="absolute bottom-2 left-2 font-title text-3xl leading-none text-white drop-shadow">{o.title}</span>
                 </span>
                 <span className="block p-3 text-sm text-mute">{o.tagline}</span>

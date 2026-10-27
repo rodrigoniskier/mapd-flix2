@@ -95,7 +95,7 @@ export function Header({ route, onProfessor }: { route: Route; onProfessor: () =
             Navegar <Icon name="chevronDown" className="h-4 w-4" />
           </button>
           {menu === 'nav' && (
-            <nav id="menu-navegar" aria-label="Menu móvel" className="absolute left-1/2 top-9 w-56 -translate-x-1/2 border-t-2 border-white bg-black/95 py-2 text-center shadow-2xl">
+            <nav id="menu-navegar" aria-label="Menu móvel" className="absolute left-1/2 top-9 w-56 -translate-x-1/2 border-t-2 border-white bg-[#0b0b0b] py-2 text-center shadow-2xl">
               <ul>
                 {NAV.map((l) => (
                   <li key={l.t}>
@@ -159,7 +159,7 @@ export function Header({ route, onProfessor }: { route: Route; onProfessor: () =
               <span className="absolute right-0.5 top-0.5 grid h-4 min-w-4 place-items-center rounded-full bg-brand px-1 text-[10px] font-bold">{notifications.length}</span>
             </button>
             {menu === 'bell' && (
-              <div className="absolute right-0 top-11 w-80 border-t-2 border-white bg-black/95 shadow-2xl" role="dialog" aria-label="Notificações">
+              <div className="absolute right-0 top-11 w-80 border-t-2 border-white bg-[#0b0b0b] shadow-2xl" role="dialog" aria-label="Notificações">
                 <ul className="max-h-96 overflow-auto">
                   {notifications.map((n) => (
                     <li key={n.t + n.d} className="border-b border-white/10 last:border-0">
@@ -182,7 +182,7 @@ export function Header({ route, onProfessor }: { route: Route; onProfessor: () =
                 <Icon name="chevronDown" className={`hidden h-4 w-4 text-white transition-transform sm:block ${menu === 'profile' ? 'rotate-180' : ''}`} />
               </button>
               {menu === 'profile' && (
-                <div className="absolute right-0 top-11 w-64 border border-white/15 bg-black/95 py-2 text-sm shadow-2xl" role="menu" aria-label="Conta">
+                <div className="absolute right-0 top-11 w-64 border border-white/15 bg-[#0b0b0b] py-2 text-sm shadow-2xl" role="menu" aria-label="Conta">
                   {profiles
                     .filter((p) => p.id !== active.id)
                     .map((p) => (

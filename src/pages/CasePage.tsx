@@ -75,6 +75,8 @@ export function CasePage({ id }: { id: string }) {
       <header className="relative overflow-hidden">
         <Photo photo={photoFor(c.id)} className="absolute inset-0 h-full w-full" eager />
         <div className="absolute inset-0 bg-gradient-to-r from-black/90 via-black/60 to-black/20" />
+        <div className="absolute inset-0 bg-gradient-to-t from-black/95 via-black/70 to-black/40 md:hidden" />
+        <div className="absolute inset-x-0 top-0 h-36 bg-gradient-to-b from-black/75 to-transparent" />
         <div className="absolute inset-x-0 bottom-0 h-32 bg-gradient-to-t from-ink to-transparent" />
         <div className="container-page relative pb-10 pt-28 md:pt-36">
           <nav aria-label="Trilha" className="text-sm text-mute">

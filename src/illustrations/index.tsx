@@ -161,13 +161,25 @@ export function EpisodeCover({ theme, illustration, number, title, className = '
   );
 }
 
-/** Marca MAPD-Flix: anticorpo estilizado + logotipo em caixa alta condensada. */
+/** Contorno do “M” da marca (grade 64×64). */
+export const M_OUTLINE = 'M9 57V7h13l10 20 10-20h13v50H43V31l-11 18-11-18v26z';
+
+/** “M” de MAPD: letra maciça em vermelho com dobras sombreadas nas diagonais. */
+export function MarkM({ className = '', glow = false }: { className?: string; glow?: boolean }) {
+  return (
+    <svg viewBox="0 0 64 64" className={className} aria-hidden="true" style={glow ? { filter: 'drop-shadow(0 0 22px rgba(227,18,43,.85))' } : undefined}>
+      <path d={M_OUTLINE} fill="#e3122b" />
+      <path d="M22 7l10 20v22L21 31V7z" fill="#000" opacity=".28" />
+      <path d="M42 7 32 27v22l11-18V7z" fill="#000" opacity=".14" />
+    </svg>
+  );
+}
+
+/** Marca MAPD-Flix: “M” vermelho + logotipo em caixa alta condensada. */
 export function Logo({ className = '', compact = false }: { className?: string; compact?: boolean }) {
   return (
     <span className={`inline-flex items-center gap-1.5 ${className}`} aria-label="MAPD-Flix">
-      <svg viewBox="0 0 64 64" className="h-7 w-7 shrink-0" aria-hidden="true">
-        <path d="M32 34v22M32 34 14 12M32 34l18-22" stroke="#e3122b" strokeWidth="9" strokeLinecap="round" fill="none" />
-      </svg>
+      <MarkM className="h-7 w-7 shrink-0" />
       {!compact && (
         <span className="hidden font-title text-[1.9rem] leading-none tracking-[0.04em] text-brand min-[420px]:inline" aria-hidden="true">
           MAPD·FLIX

@@ -59,14 +59,16 @@ export function Home({ background = false }: { background?: boolean }) {
       {/* BILLBOARD */}
       <section aria-labelledby="destaque" className="relative h-[82vh] max-h-[860px] min-h-[520px] overflow-hidden">
         <Photo key={featured.id} photo={seriesArt[featured.id].billboard} className="ken-burns absolute inset-0 h-full w-full" eager />
-        <div className="absolute inset-0 bg-gradient-to-r from-black/90 via-black/45 to-transparent" />
+        <div className="absolute inset-0 bg-gradient-to-r from-black/90 via-black/60 to-transparent" />
+        <div className="absolute inset-0 bg-gradient-to-t from-black/95 via-black/70 to-black/40 md:hidden" />
+        <div className="absolute inset-x-0 top-0 h-36 bg-gradient-to-b from-black/75 to-transparent" />
         <div className="absolute inset-x-0 bottom-0 h-40 bg-gradient-to-t from-ink to-transparent" />
         <div className="container-page relative flex h-full flex-col justify-end pb-[12vh]">
-          <div className="max-w-xl animate-fade-up" key={featured.id}>
+          <div className="max-w-2xl animate-fade-up" key={featured.id}>
             <div className="flex items-center gap-2 text-sm font-bold uppercase tracking-[0.35em] text-white/90">
-              <span className="font-title text-2xl tracking-wider text-brand">MAPD</span> Série
+              <span className="rounded-[2px] bg-brand px-1 pb-px pt-[3px] font-title text-lg leading-none tracking-wider text-white">MAPD</span> Série
             </div>
-            <T id="destaque" className="mt-1 font-title text-[clamp(3.2rem,10vw,8.5rem)] [overflow-wrap:anywhere] leading-[0.85] tracking-wide text-white drop-shadow-[0_4px_20px_rgba(0,0,0,.6)]">
+            <T id="destaque" className="mt-1 font-title text-[clamp(2.6rem,6.2vw,6rem)] [overflow-wrap:break-word] leading-[0.85] tracking-wide text-white drop-shadow-[0_4px_20px_rgba(0,0,0,.6)]">
               {featured.title}
             </T>
             <div className="mt-3 flex items-center gap-2">
@@ -96,7 +98,7 @@ export function Home({ background = false }: { background?: boolean }) {
             ))}
           </div>
         </div>
-        <span className="absolute bottom-[22vh] right-0 hidden border-l-[3px] border-white/80 bg-white/10 py-1.5 pl-3 pr-12 text-lg text-white sm:block" aria-label="Nível: graduação em Medicina">
+        <span className="absolute bottom-[22vh] right-0 hidden border-l-[3px] border-white/80 bg-black/60 py-1.5 pl-3 pr-12 text-lg text-white sm:block" aria-label="Nível: graduação em Medicina">
           MED
         </span>
       </section>

@@ -1,9 +1,10 @@
 import { useEffect, useRef, useState } from 'react';
+import { MarkM } from '../illustrations';
 
 /**
  * Abertura original do MAPD-Flix (≈ 3 s): tela preta, um traçado de monitor
- * cardíaco percorre a tela em vermelho, o pico forma o anticorpo da marca e o
- * nome aparece com brilho. Som próprio sintetizado (Web Audio): dois bipes de
+ * cardíaco percorre a tela em vermelho e desenha um “M” (de MAPD); o traço dá
+ * lugar ao M maciço da marca, que brilha, e o nome aparece. Som próprio sintetizado (Web Audio): dois bipes de
  * monitor seguidos de um acorde grave que cresce. Não reutiliza marcas de
  * terceiros.
  */
@@ -84,7 +85,7 @@ export function Intro({ onDone, sound = true }: { onDone: () => void; sound?: bo
   return (
     <div className="fixed inset-0 z-[100] grid place-items-center overflow-hidden bg-black" role="img" aria-label="Abertura MAPD-Flix" data-testid="intro">
       <style>{`
-        @keyframes mapd-trace { from { stroke-dashoffset: 1400 } to { stroke-dashoffset: 0 } }
+        @keyframes mapd-trace { from { stroke-dashoffset: 1700 } to { stroke-dashoffset: 0 } }
         @keyframes mapd-glow { 0% { opacity: 0; transform: scale(.6); filter: blur(12px) } 60% { opacity: 1; transform: scale(1.06); filter: blur(0) } 100% { opacity: 1; transform: scale(1) } }
         @keyframes mapd-out { to { opacity: 0; transform: scale(3.2); filter: blur(6px) } }
         @keyframes mapd-rays { 0% { opacity: 0; transform: scaleX(.2) } 50% { opacity: .9 } 100% { opacity: 0; transform: scaleX(1.6) } }
@@ -101,23 +102,21 @@ export function Intro({ onDone, sound = true }: { onDone: () => void; sound?: bo
             </filter>
           </defs>
           <path
-            d="M0 170 H330 l20 -18 l18 18 H420 l22 26 l40 -176 l36 236 l26 -86 H600 l18 -14 l16 14 H1000"
+            d="M0 230 H300 l16 -14 l16 14 H372 l14 18 l14 -18 H416 V40 L500 150 L584 40 V230 H640 l16 -12 l16 12 H1000"
             fill="none"
             stroke="#e3122b"
             strokeWidth="6"
             strokeLinejoin="round"
             strokeLinecap="round"
             filter="url(#intro-glow)"
-            style={{ strokeDasharray: 1400, animation: 'mapd-trace 1.1s cubic-bezier(.5,0,.3,1) forwards' }}
+            style={{ strokeDasharray: 1700, animation: 'mapd-trace 1.1s cubic-bezier(.5,0,.3,1) forwards' }}
           />
         </svg>
       )}
       {phase !== 'trace' && (
         <div className="relative flex flex-col items-center" style={{ animation: phase === 'out' ? 'mapd-out .55s ease-in forwards' : 'mapd-glow .9s ease-out both' }}>
           <span aria-hidden="true" className="pointer-events-none absolute left-1/2 top-[38%] h-24 w-[70vw] -translate-x-1/2 bg-gradient-to-r from-transparent via-brand/60 to-transparent blur-2xl" style={{ animation: 'mapd-rays 1.4s ease-out both' }} />
-          <svg viewBox="0 0 64 64" className="h-28 w-28 drop-shadow-[0_0_28px_rgba(227,18,43,.9)] md:h-40 md:w-40" aria-hidden="true">
-            <path d="M32 34v22M32 34 14 12M32 34l18-22" stroke="#e3122b" strokeWidth="8" strokeLinecap="round" fill="none" />
-          </svg>
+          <MarkM glow className="h-32 w-32 md:h-48 md:w-48" />
           <span className="mt-2 font-title text-6xl tracking-[0.06em] text-brand drop-shadow-[0_0_24px_rgba(227,18,43,.8)] md:text-8xl">MAPD·FLIX</span>
         </div>
       )}

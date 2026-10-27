@@ -111,3 +111,13 @@ Novos testes:
 - E2E 15: “Pular abertura” e abertura curta com movimento reduzido.
 - E2E 16: Top 10 com 10 itens, Minha lista (adicionar pela série e pelo episódio, fileira no início, remover), lembrete de “Em breve”.
 - Testes existentes ajustados: janela da série (abre, fecha com Esc), progresso por perfil (chave `mapdflix:progress:<perfil>`, versão 3), “Continuar estudando” a partir da leitura parcial.
+
+## Versão 1.2 — marca “M” e auditoria de contraste
+
+- Marca trocada: o anticorpo deu lugar a um “M” de MAPD (logotipo, abertura e ícone da aba). Na abertura, o traçado do monitor desenha o “M”.
+- Fonte dos títulos (Bebas Neue, SIL OFL) embutida no build: o layout não muda se o Google Fonts falhar.
+- **Auditoria de contraste (WCAG 2.1 AA).** `scripts/contraste/coletar.mjs` abre 12 telas (perfis, início, janela da série, episódio, caso, desafio, fontes, busca, Minha lista, navegar, menu e janela do professor) em 1366×768 e 390×844, rolando cada uma (92 capturas). Para cada trecho de texto visível, compara a cor do texto com o fundo real medido numa captura sem texto (inclui fotos e degradês; usa o pixel claro do percentil 92 como pior caso). `scripts/contraste/analisar.py` aplica 4,5:1 (texto normal) e 3:1 (texto grande).
+  - Antes: 89 trechos abaixo do mínimo (rótulos de cartões sobre fotos claras, selo “MAPD” vermelho sobre foto, destaque e cabeçalhos no celular, títulos de pôster, botão desativado).
+  - Correções: degradês mais fortes nos cartões e pôsteres; camada escura extra no celular e no topo dos cabeçalhos com foto; selo “MAPD” em branco sobre vermelho (4,9:1); rótulos pequenos em branco pleno; menus com fundo sólido; botão desativado em cinza legível; selo “MED” com fundo escuro.
+  - Depois: 0 falhas reais (1 falso positivo: rótulo parcialmente coberto pelo menu aberto).
+- Testes: 34/34 unitários e 16/16 E2E após as mudanças.

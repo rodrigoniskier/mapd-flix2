@@ -100,7 +100,7 @@
   }
   .icon-btn:hover { border-color: #fff; background: rgb(255 255 255 / 0.12); }
   .icon-btn[aria-pressed='true'] { border-color: #fff; }
-  .btn[disabled], .btn[aria-disabled='true'] { opacity: 0.5; cursor: not-allowed; }
+  .btn[disabled], .btn[aria-disabled='true'] { background: var(--color-panel-2); color: var(--color-mute); border-color: var(--color-line); cursor: not-allowed; }
 
   .chip {
     display: inline-flex;

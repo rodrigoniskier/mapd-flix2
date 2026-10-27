@@ -123,11 +123,11 @@ function TitleCard({ to, photoKey, kicker, title, meta, itemKey, seriesId, badge
         <a href={to} className="block" {...dataAttr} aria-label={`${kicker}: ${title}`}>
           <div className="relative flex aspect-video overflow-hidden bg-panel">
             <Photo photo={photo} className="h-full w-full" decorative />
-            <div className="absolute inset-0 bg-gradient-to-t from-black/85 via-black/10 to-transparent" />
-            <span className="absolute left-2 top-2 font-title text-lg leading-none tracking-wider text-brand drop-shadow">MAPD</span>
+            <div className="absolute inset-0 bg-gradient-to-t from-black/95 via-black/80 via-50% to-transparent to-90%" />
+            <span className="absolute left-2 top-2 rounded-[2px] bg-brand px-1 pb-px pt-[3px] font-title text-sm leading-none tracking-wider text-white">MAPD</span>
             {badge && <span className="absolute right-2 top-2">{badge}</span>}
             <span className="absolute inset-x-2 bottom-2">
-              <span className="block text-[11px] font-semibold uppercase tracking-wider text-white/80">{kicker}</span>
+              <span className="block text-[11px] font-bold uppercase tracking-wider text-white">{kicker}</span>
               <span className="line-clamp-2 block font-bold leading-snug text-white drop-shadow">{title}</span>
             </span>
             {progress !== undefined && progress > 0 && (
@@ -237,13 +237,13 @@ export function SeriesCard({ series }: { series: Series }) {
   const art = seriesArt[series.id];
   const reminded = state.reminders.includes(series.id);
   const poster = (
-    <div className="relative aspect-[2/3] overflow-hidden rounded-[4px] bg-panel">
+    <div className="relative aspect-[2/3] overflow-hidden rounded-[4px] bg-panel" style={{ containerType: 'inline-size' }}>
       <Photo photo={art?.poster} className={`h-full w-full transition-transform duration-300 group-hover:scale-[1.05] ${available ? '' : 'grayscale-[40%]'}`} decorative />
-      <div className="absolute inset-0 bg-gradient-to-t from-black via-black/20 to-black/10" />
-      <span className="absolute left-2 top-2 font-title text-lg leading-none tracking-wider text-brand drop-shadow">MAPD</span>
+      <div className="absolute inset-0 bg-gradient-to-t from-black via-black/80 via-55% to-black/20 to-90%" />
+      <span className="absolute left-2 top-2 rounded-[2px] bg-brand px-1 pb-px pt-[3px] font-title text-sm leading-none tracking-wider text-white">MAPD</span>
       <div className="absolute inset-x-0 bottom-0 p-3">
-        <div className="text-[10px] font-bold uppercase tracking-[0.25em] text-white/80">Série</div>
-        <div className="font-title text-[2rem] leading-[0.95] tracking-wide text-white [overflow-wrap:anywhere]">{series.title}</div>
+        <div className="text-[11px] font-bold uppercase tracking-[0.25em] text-white">Série</div>
+        <div className="font-title leading-[0.95] tracking-wide text-white [overflow-wrap:break-word]" style={{ fontSize: 'min(2rem, 11.5cqw)' }}>{series.title}</div>
         {available ? (
           <div className="mt-1 text-xs text-white/85">{eps.length} episódios · caso · desafio</div>
         ) : (
@@ -301,10 +301,10 @@ export function Top10Card({ episode, rank, count }: { episode: Episode; rank: nu
         aria-label={`Top ${rank}: ${episode.title} — cobrado em ${count} questões dos desafios`}
       >
         <Photo photo={photoFor(episode.id)} className="h-full w-full transition-transform duration-300 group-hover:scale-105" decorative />
-        <div className="absolute inset-0 bg-gradient-to-t from-black via-black/10 to-transparent" />
-        <span className="absolute left-1.5 top-1.5 font-title text-base leading-none tracking-wider text-brand">MAPD</span>
+        <div className="absolute inset-0 bg-gradient-to-t from-black via-black/85 via-60% to-black/30" />
+        <span className="absolute left-1.5 top-1.5 rounded-[2px] bg-brand px-1 pb-px pt-[3px] font-title text-sm leading-none tracking-wider text-white">MAPD</span>
         <span className="absolute inset-x-2 bottom-2">
-          <span className="block text-[10px] font-semibold uppercase tracking-wider text-white/80">{s.shortTitle}</span>
+          <span className="block text-[11px] font-bold uppercase tracking-wider text-white">{s.shortTitle}</span>
           <span className="line-clamp-3 block text-sm font-bold leading-tight text-white">{episode.title}</span>
         </span>
       </a>

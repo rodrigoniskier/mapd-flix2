@@ -2,7 +2,7 @@
 
 Plataforma web educacional de **Mecanismos de Agressão, Patológicos e de Defesa** — Imunologia Clínica para estudantes de Medicina, com navegação inspirada em serviços de streaming: séries, episódios, casos clínicos interativos e “filmes especiais” (desafios clínicos).
 
-Interface no estilo dos serviços de streaming — fundo carvão, vermelho como destaque, “Quem está estudando?”, abertura animada, destaque em tela cheia, fileiras horizontais, Top 10, Minha lista, cartões que se expandem e janela “Mais informações” com episódios. A marca, a abertura (traçado de monitor cardíaco que forma o anticorpo da marca) e o som (bipes de monitor + acorde, sintetizados) são originais; nenhum logotipo, vinheta ou som da Netflix é reutilizado.
+Interface no estilo dos serviços de streaming — fundo carvão, vermelho como destaque, “Quem está estudando?”, abertura animada, destaque em tela cheia, fileiras horizontais, Top 10, Minha lista, cartões que se expandem e janela “Mais informações” com episódios. A marca (um “M” vermelho de MAPD), a abertura (traçado de monitor cardíaco que desenha o “M”) e o som (bipes de monitor + acorde, sintetizados) são originais; nenhum logotipo, vinheta ou som da Netflix é reutilizado.
 
 Fotografias reais de cenas clínicas e laboratoriais (Unsplash, licença livre), uma por série, episódio, caso e desafio, com créditos na página “Fontes”. O perfil do professor traz foto e dados do autor.
 

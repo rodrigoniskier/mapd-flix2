@@ -72,7 +72,9 @@ export function EpisodePage({ id }: { id: string }) {
       <header className="relative overflow-hidden">
         <div className="relative h-[62vh] max-h-[620px] min-h-[420px]">
           <Photo photo={photoFor(ep.id)} className="absolute inset-0 h-full w-full" eager />
-          <div className="absolute inset-0 bg-gradient-to-r from-black/90 via-black/55 to-transparent" />
+          <div className="absolute inset-0 bg-gradient-to-r from-black/90 via-black/65 to-transparent" />
+          <div className="absolute inset-0 bg-gradient-to-t from-black/95 via-black/70 to-black/40 md:hidden" />
+          <div className="absolute inset-x-0 top-0 h-36 bg-gradient-to-b from-black/75 to-transparent" />
           <div className="absolute inset-x-0 bottom-0 h-48 bg-gradient-to-t from-ink to-transparent" />
           <div className="container-page relative flex h-full flex-col justify-end pb-10">
             <nav aria-label="Trilha" className="text-sm text-soft">
@@ -80,7 +82,7 @@ export function EpisodePage({ id }: { id: string }) {
               <a href={href.series(s.id)} className="hover:text-white">{s.title}</a> <span aria-hidden="true">›</span> Episódio {ep.number}
             </nav>
             <div className="mt-3 flex items-center gap-2 text-sm font-bold uppercase tracking-[0.25em] text-white/90">
-              <span className="font-title text-xl tracking-wider text-brand">MAPD</span> {s.title} · E{ep.number} de {total}
+              <span className="rounded-[2px] bg-brand px-1 pb-px pt-[3px] font-title text-base leading-none tracking-wider text-white">MAPD</span> {s.title} · E{ep.number} de {total}
             </div>
             <h1 className="mt-1 max-w-4xl font-title text-[clamp(2.6rem,7vw,6rem)] leading-[0.9] [overflow-wrap:anywhere] tracking-wide text-white drop-shadow-lg">{ep.title}</h1>
             <p className="mt-3 max-w-2xl text-lg text-white/90">{ep.tagline}</p>
