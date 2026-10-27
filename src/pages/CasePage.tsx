@@ -180,10 +180,10 @@ export function CasePage({ id }: { id: string }) {
                 )}
 
                 {step.teachingPoint && (!step.decision || chosen) && (
-                  <aside className="mt-4 rounded-xl border-l-4 border-info/60 bg-info/10 px-4 py-3 text-[0.95rem]">
+                  <div role="note" className="mt-4 rounded-xl border-l-4 border-info/60 bg-info/10 px-4 py-3 text-[0.95rem]">
                     <div className="text-xs font-bold uppercase tracking-wider text-white/80">Ponto de aprendizagem</div>
                     <Rich text={step.teachingPoint} />
-                  </aside>
+                  </div>
                 )}
 
                 {isLast && i < c.steps.length - 1 && (
@@ -212,7 +212,7 @@ export function CasePage({ id }: { id: string }) {
           )}
         </div>
 
-        <aside className="space-y-6">
+        <div className="space-y-6">
           <section className="card-surface p-5" aria-labelledby="obj-caso">
             <h2 id="obj-caso" className="text-lg font-bold">Objetivos do caso</h2>
             <ul className="mt-2 space-y-1.5 text-sm">
@@ -239,7 +239,7 @@ export function CasePage({ id }: { id: string }) {
           </section>
           <p className="text-xs text-mute">{c.disclaimer}</p>
           <References citations={c.citations} />
-        </aside>
+        </div>
       </div>
     </article>
   );

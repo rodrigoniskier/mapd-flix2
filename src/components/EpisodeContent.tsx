@@ -50,7 +50,7 @@ export function EpisodeContent({ episode }: { episode: Episode }) {
         </ul>
       </section>
 
-      <section id="conceitos" aria-labelledby="h-conceitos" className="scroll-mt-24">
+      <section id="conceitos" aria-label="Conceitos fundamentais (glossário)" className="scroll-mt-24">
         <h2 id="h-conceitos" className={H}>
           Conceitos fundamentais
         </h2>

@@ -38,7 +38,7 @@ Testes:
 ```bash
 npm run typecheck    # TypeScript estrito
 npm run test:unit    # 34 testes (conteúdo, progresso, perfis, quiz, busca, rotas)
-npm run test:e2e     # 16 testes Playwright no build de produção
+npm run test:e2e     # 17 testes Playwright no build de produção (inclui auditoria axe WCAG 2.1 AA)
 ```
 
 Se o navegador do Playwright não estiver instalado: `npx playwright install chromium`.

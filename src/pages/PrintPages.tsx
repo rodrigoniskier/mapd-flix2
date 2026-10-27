@@ -15,7 +15,7 @@ function PrintShell({ title, back, children }: { title: string; back: string; ch
   }, [title]);
   return (
     <div className="min-h-screen bg-[#e9ebf0] pb-10 print:bg-white print:pb-0">
-      <div className="no-print sticky top-0 z-30 border-b border-black/10 bg-ink/95 backdrop-blur" data-no-print>
+      <header className="no-print sticky top-0 z-30 border-b border-black/10 bg-ink/95 backdrop-blur" data-no-print>
         <div className="container-page flex flex-wrap items-center gap-3 py-3">
           <a href={back} className="btn btn-ghost">
             <Icon name="chevronLeft" className="h-5 w-5" /> Voltar
@@ -33,11 +33,13 @@ function PrintShell({ title, back, children }: { title: string; back: string; ch
             </>
           )}
         </div>
-      </div>
+      </header>
       <PrintModeProvider value={true}>
+        <main>
         <article className="print-doc mx-auto mt-6 w-full max-w-[210mm] px-[14mm] py-[14mm] shadow-xl print:mt-0 print:max-w-none print:p-0 print:shadow-none" data-testid="print-doc">
           {children}
         </article>
+        </main>
       </PrintModeProvider>
     </div>
   );
@@ -45,12 +47,12 @@ function PrintShell({ title, back, children }: { title: string; back: string; ch
 
 function DocHeader({ kicker, title, subtitle }: { kicker: string; title: string; subtitle?: string }) {
   return (
-    <header className="mb-6 border-b-2 pb-3">
+    <div className="mb-6 border-b-2 pb-3">
       <div className="text-xs font-bold uppercase tracking-[0.2em] print-muted">MAPD-Flix · {kicker}</div>
       <h1 className="mt-1 font-display text-3xl font-extrabold">{title}</h1>
       {subtitle && <p className="mt-1 text-base print-muted">{subtitle}</p>}
       <p className="mt-1 text-xs print-muted">Gerado em {new Date().toLocaleDateString('pt-BR')} · Material educacional</p>
-    </header>
+    </div>
   );
 }
 

@@ -9,7 +9,7 @@ Execução: 27/10/2026, Node.js 22.23, Chromium (Playwright 1.63), build de prod
 | Type-check (`tsc --noEmit`, modo estrito) | ✅ sem erros |
 | Build de produção | ✅ CSS 57 kB + JS 572 kB embutidos em `dist/index.html` |
 | Testes unitários | ✅ 34/34 |
-| Testes de navegação (E2E) | ✅ 16/16 (≈ 2 min) |
+| Testes de navegação (E2E) | ✅ 17/17 (≈ 3 min) |
 | Rotas internas visitadas pelo rastreador | 71, nenhuma quebrada |
 | Erros de console da aplicação | 0 (apenas falhas externas esperadas sem internet: fontes web) |
 
@@ -98,7 +98,7 @@ Artefatos gerados em `test-results/` (PDFs de impressão, capturas em 375/768/14
 
 ## Não coberto automaticamente
 
-- Leitores de tela reais (NVDA/VoiceOver) e auditoria completa WCAG (axe não estava disponível offline).
+- Leitores de tela reais (NVDA/VoiceOver). (A auditoria axe passou a rodar na versão 1.3.)
 - Reprodução real dos vídeos (sem acesso ao YouTube no ambiente de testes; verificação feita no navegador do usuário).
 - Navegadores Safari/Firefox.
 
@@ -121,3 +121,13 @@ Novos testes:
   - Correções: degradês mais fortes nos cartões e pôsteres; camada escura extra no celular e no topo dos cabeçalhos com foto; selo “MAPD” em branco sobre vermelho (4,9:1); rótulos pequenos em branco pleno; menus com fundo sólido; botão desativado em cinza legível; selo “MED” com fundo escuro.
   - Depois: 0 falhas reais (1 falso positivo: rótulo parcialmente coberto pelo menu aberto).
 - Testes: 34/34 unitários e 16/16 E2E após as mudanças.
+
+## Versão 1.3 — auditoria axe e fontes embutidas
+
+- **axe-core 4.10.2** (Deque, MPL-2.0; cópia em `tests/vendor/axe.min.js`, obtida do cdnjs) roda no novo teste E2E 17 em 11 telas × 2 tamanhos (1366 e 390 px), com as regras WCAG 2.1 A/AA e boas práticas.
+  - Primeira execução: 7 regras violadas, nenhuma de contraste (confirma a auditoria anterior). Problemas: logotipo com `aria-label` sem papel; conteúdo fora de regiões (tela de perfis e impressão); regiões com nomes repetidos; cabeçalho de tabela vazio; saltos de nível de título (h2 → h4, h3 → h5); `aside` dentro de `main`; página de impressão sem `main`.
+  - Correções: `role="img"` no logotipo; `header`/`main` na tela de perfis e na impressão; nomes únicos para o destaque e o glossário; texto oculto “Critério” no comparador; títulos dos blocos em h3/h4; destaques e quadros como `role="note"`.
+  - Depois: **0 violações** em todas as 22 combinações.
+- Inter (variável, 400–900) também embutida; o HTML não faz mais nenhuma requisição a fontes externas.
+- Auditoria de contraste por pixels repetida com as fontes finais: 0 falhas reais.
+- Resultado: 34/34 unitários, 17/17 E2E.

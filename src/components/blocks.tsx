@@ -13,7 +13,7 @@ export function BlockView({ block }: { block: ContentBlock }) {
     case 'text':
       return (
         <div className="prose-mapd max-w-3xl">
-          {block.title && <h4 className="mb-1 mt-4 text-base font-bold">{block.title}</h4>}
+          {block.title && <h3 className="mb-1 mt-4 text-base font-bold">{block.title}</h3>}
           {block.paragraphs.map((p, i) => (
             <p key={i}>
               <Rich text={p} />
@@ -38,7 +38,7 @@ export function BlockView({ block }: { block: ContentBlock }) {
     case 'list':
       return (
         <div className="max-w-3xl">
-          {block.title && <h4 className="mb-2 text-base font-bold">{block.title}</h4>}
+          {block.title && <h3 className="mb-2 text-base font-bold">{block.title}</h3>}
           {block.ordered ? (
             <ol className="list-decimal space-y-1.5 pl-6">
               {block.items.map((it, i) => (
@@ -78,7 +78,7 @@ function Expandables({ title, items }: { title?: string; items: { title: string;
     });
   return (
     <div className="max-w-3xl">
-      {title && <h4 className="mb-2 text-base font-bold">{stripHint(title, print)}</h4>}
+      {title && <h3 className="mb-2 text-base font-bold">{stripHint(title, print)}</h3>}
       <div className="space-y-2" data-component="expandable">
         {items.map((it, i) => {
           const isOpen = print || open.has(i);
@@ -86,7 +86,7 @@ function Expandables({ title, items }: { title?: string; items: { title: string;
           return (
             <div key={i} className="card-surface avoid-break overflow-hidden">
               {print ? (
-                <h5 className="px-4 pt-3 font-semibold text-white">{it.title}</h5>
+                <h4 className="px-4 pt-3 font-semibold text-white">{it.title}</h4>
               ) : (
                 <button
                   type="button"
@@ -122,7 +122,7 @@ function Flow({ title, intro, steps }: { title: string; intro?: string; steps: {
   const shown = print ? steps.length : revealed;
   return (
     <div className="card-surface avoid-break max-w-4xl p-4 md:p-5" data-component="flow">
-      <h4 className="text-base font-bold">{stripHint(title, print)}</h4>
+      <h3 className="text-base font-bold">{stripHint(title, print)}</h3>
       {intro && <p className="mt-1 text-sm text-mute">{intro}</p>}
       <ol className="mt-4 space-y-2">
         {steps.slice(0, shown).map((s, i) => {
@@ -196,7 +196,7 @@ function Flow({ title, intro, steps }: { title: string; intro?: string; steps: {
 function Timeline({ title, events }: { title: string; events: { time: string; label: string; detail: string }[] }) {
   return (
     <div className="max-w-4xl avoid-break" data-component="timeline">
-      <h4 className="mb-3 text-base font-bold">{title}</h4>
+      <h3 className="mb-3 text-base font-bold">{title}</h3>
       <ol className="relative ml-3 border-l-2 border-line pl-6">
         {events.map((e, i) => (
           <li key={i} className="relative mb-5 last:mb-0">
@@ -220,7 +220,7 @@ function Compare({ title, columns, rows, note }: { title: string; columns: strin
   return (
     <figure className="avoid-break max-w-5xl" data-component="compare">
       <figcaption className="mb-2 flex flex-wrap items-center justify-between gap-2">
-        <h4 className="text-base font-bold">{title}</h4>
+        <h3 className="text-base font-bold">{title}</h3>
         {!print && columns.length > 2 && (
           <div className="flex flex-wrap gap-1.5" role="group" aria-label="Destacar coluna">
             {columns.map((c, i) => (
@@ -241,7 +241,7 @@ function Compare({ title, columns, rows, note }: { title: string; columns: strin
         <table className="w-full min-w-[560px] border-collapse text-left text-sm">
           <thead>
             <tr className="bg-white/[0.06]">
-              <th scope="col" className="w-40 px-3 py-2.5 font-semibold text-white" />
+              <th scope="col" className="w-40 px-3 py-2.5 font-semibold text-white"><span className="sr-only">Critério</span></th>
               {columns.map((c, i) => (
                 <th key={c} scope="col" className={`px-3 py-2.5 font-semibold text-white ${focus === i ? 'bg-brand/20' : ''}`}>
                   {c}
@@ -337,7 +337,7 @@ function Chain({ title, links }: { title?: string; links: { stage: ChainStage; t
   const n = print ? links.length : shown;
   return (
     <div className="card-surface avoid-break max-w-4xl p-4 md:p-5" data-component="chain">
-      <h4 className="text-base font-bold">{title ? `Do mecanismo à conduta — ${title}` : 'Do mecanismo à conduta'}</h4>
+      <h3 className="text-base font-bold">{title ? `Do mecanismo à conduta — ${title}` : 'Do mecanismo à conduta'}</h3>
       <ol className="mt-3 grid gap-2 md:grid-cols-2 xl:grid-cols-3">
         {links.slice(0, n).map((l, i) => (
           <li key={i} className="animate-fade-up rounded-xl border-l-4 bg-white/[0.04] px-3 py-2.5" style={{ borderColor: STAGE[l.stage].color }}>
@@ -384,13 +384,13 @@ const CALLOUT: Record<CalloutVariant, { label: string; cls: string }> = {
 export function Callout({ variant, title, body }: { variant: CalloutVariant; title: string; body: string }) {
   const c = CALLOUT[variant];
   return (
-    <aside className={`avoid-break max-w-3xl rounded-xl border-l-4 px-4 py-3 ${c.cls}`} data-component="callout">
+    <div role="note" className={`avoid-break max-w-3xl rounded-xl border-l-4 px-4 py-3 ${c.cls}`} data-component="callout">
       <div className="text-xs font-bold uppercase tracking-wider text-white/80">{c.label}</div>
       <div className="font-semibold text-white">{title}</div>
       <p className="mt-1 text-[0.95rem]">
         <Rich text={body} />
       </p>
-    </aside>
+    </div>
   );
 }
 

@@ -105,7 +105,7 @@ export function EpisodePage({ id }: { id: string }) {
       </header>
 
       <div className="container-page grid grid-cols-1 gap-10 lg:grid-cols-[240px_minmax(0,1fr)]">
-        <aside className="hidden lg:block">
+        <div className="hidden lg:block">
           <nav aria-label="Seções do episódio" className="sticky top-24 text-sm">
             <div className="mb-2 font-bold uppercase tracking-wider text-mute">Neste episódio</div>
             <ul className="space-y-1 border-l border-line">
@@ -118,7 +118,7 @@ export function EpisodePage({ id }: { id: string }) {
               ))}
             </ul>
           </nav>
-        </aside>
+        </div>
         <div className="min-w-0">
           <EpisodeContent episode={ep} />
 

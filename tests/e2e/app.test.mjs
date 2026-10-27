@@ -519,3 +519,28 @@ test('Minha lista, avaliações, Top 10 e lembrete de “Em breve”', async () 
   assert.deepEqual(errors, []);
   await page.close();
 });
+
+test('acessibilidade: axe-core sem violações WCAG 2.1 A/AA (inclui contraste) em 11 telas × 2 tamanhos', async () => {
+  const AXE = fs.readFileSync(path.join(root, 'tests', 'vendor', 'axe.min.js'), 'utf8');
+  const screens = [
+    ['#/', null], ['#/', 'professor'], ['#/serie/autoimunidade', 'professor'], ['#/episodio/auto-e1-autotolerancia', 'professor'],
+    ['#/caso/caso-a', 'professor'], ['#/quiz/quiz-hipersensibilidades', 'professor'], ['#/sobre', 'professor'],
+    ['#/busca?q=complemento', 'professor'], ['#/minha-lista', 'professor'], ['#/navegar/casos', 'professor'],
+    ['#/imprimir/episodio/auto-e1-autotolerancia', 'professor'],
+  ];
+  const found = [];
+  for (const [width, height] of [[1366, 768], [390, 844]]) {
+    for (const [route, profile] of screens) {
+      const { page } = await open(route, { width, height, profile });
+      await page.waitForTimeout(400);
+      await page.addScriptTag({ content: AXE });
+      const v = await page.evaluate(async () =>
+        (await window.axe.run(document, { runOnly: { type: 'tag', values: ['wcag2a', 'wcag2aa', 'wcag21a', 'wcag21aa', 'best-practice'] } })).violations.map((x) => `${x.id} (${x.nodes.length})`),
+      );
+      for (const x of v) found.push(`${width}px ${route} [${profile ?? 'perfis'}]: ${x}`);
+      await page.close();
+    }
+  }
+  fs.writeFileSync(path.join(OUT, 'axe.json'), JSON.stringify(found, null, 2));
+  assert.deepEqual(found, []);
+});

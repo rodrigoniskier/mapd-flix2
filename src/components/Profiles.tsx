@@ -73,9 +73,9 @@ export function ProfileGate() {
 
   return (
     <div className="flex min-h-screen flex-col bg-ink" data-testid="profile-gate">
-      <div className="container-page flex h-20 items-center">
+      <header className="container-page flex h-20 items-center">
         <Logo />
-      </div>
+      </header>
       <main className="grid flex-1 place-items-center px-4 pb-20">
         <div className="text-center">
           <h1 className="text-3xl font-medium text-white md:text-5xl">{managing ? 'Gerenciar perfis' : 'Quem está estudando?'}</h1>

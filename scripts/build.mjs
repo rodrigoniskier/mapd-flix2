@@ -78,17 +78,14 @@ async function buildJs(minify = true) {
   return result.outputFiles[0].text;
 }
 
-// Bebas Neue (SIL OFL) embutida: os títulos não dependem do Google Fonts.
-const BEBAS = `@font-face{font-family:'Bebas Neue';font-style:normal;font-weight:400;font-display:block;src:url(data:font/woff2;base64,${fs.readFileSync(path.join(root, 'public', 'fonts', 'bebas-neue-latin.woff2')).toString('base64')}) format('woff2')}`;
+// Fontes embutidas (SIL OFL): Bebas Neue (títulos) e Inter variável (texto). Nenhuma dependência externa.
+const BEBAS = `@font-face{font-family:'Bebas Neue';font-style:normal;font-weight:400;font-display:block;src:url(data:font/woff2;base64,${fs.readFileSync(path.join(root, 'public', 'fonts', 'bebas-neue-latin.woff2')).toString('base64')}) format('woff2')}@font-face{font-family:'Inter';font-style:normal;font-weight:100 900;font-display:swap;src:url(data:font/woff2;base64,${fs.readFileSync(path.join(root, 'public', 'fonts', 'inter-latin-var.woff2')).toString('base64')}) format('woff2')}`;
 
 const HEAD = (css) => `<meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <meta name="description" content="MAPD-Flix: Imunologia Clínica em formato de séries — autoimunidade, imunodeficiências e hipersensibilidades.">
 <meta name="theme-color" content="#141414">
 <title>MAPD-Flix</title>
-<link rel="preconnect" href="https://fonts.googleapis.com">
-<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap">
 <link rel="icon" href="data:image/svg+xml,${encodeURIComponent(fs.readFileSync(path.join(root, 'public', 'favicon.svg'), 'utf8'))}">
 <style>${BEBAS}${css}</style>`;
 

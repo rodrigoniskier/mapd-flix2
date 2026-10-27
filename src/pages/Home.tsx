@@ -57,7 +57,7 @@ export function Home({ background = false }: { background?: boolean }) {
   return (
     <div inert={background} aria-hidden={background || undefined}>
       {/* BILLBOARD */}
-      <section aria-labelledby="destaque" className="relative h-[82vh] max-h-[860px] min-h-[520px] overflow-hidden">
+      <section aria-label={`Destaque: série ${featured.title}`} className="relative h-[82vh] max-h-[860px] min-h-[520px] overflow-hidden">
         <Photo key={featured.id} photo={seriesArt[featured.id].billboard} className="ken-burns absolute inset-0 h-full w-full" eager />
         <div className="absolute inset-0 bg-gradient-to-r from-black/90 via-black/60 to-transparent" />
         <div className="absolute inset-0 bg-gradient-to-t from-black/95 via-black/70 to-black/40 md:hidden" />

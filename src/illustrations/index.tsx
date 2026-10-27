@@ -178,7 +178,7 @@ export function MarkM({ className = '', glow = false }: { className?: string; gl
 /** Marca MAPD-Flix: “M” vermelho + logotipo em caixa alta condensada. */
 export function Logo({ className = '', compact = false }: { className?: string; compact?: boolean }) {
   return (
-    <span className={`inline-flex items-center gap-1.5 ${className}`} aria-label="MAPD-Flix">
+    <span className={`inline-flex items-center gap-1.5 ${className}`} role="img" aria-label="MAPD-Flix">
       <MarkM className="h-7 w-7 shrink-0" />
       {!compact && (
         <span className="hidden font-title text-[1.9rem] leading-none tracking-[0.04em] text-brand min-[420px]:inline" aria-hidden="true">
