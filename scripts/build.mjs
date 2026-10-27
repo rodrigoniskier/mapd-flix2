@@ -98,7 +98,8 @@ async function main() {
     `<!doctype html>\n<html lang="pt-BR">\n<head>\n${HEAD(css)}\n</head>\n<body>\n${body}\n</body>\n</html>\n`,
   );
   // Fragmento para publicação como Artifact (o host adiciona o esqueleto HTML).
-  fs.writeFileSync(path.join(dist, 'artifact.html'), `${HEAD(css)}\n${body}\n`);
+  // No modo hospedado (Artifact), impressão e iframes externos são bloqueados pelo ambiente.
+  fs.writeFileSync(path.join(dist, 'artifact.html'), `${HEAD(css)}\n<script>window.__MAPD_EMBED__=true</script>\n${body}\n`);
   const kb = (n) => (n / 1024).toFixed(0) + ' kB';
   console.log(`build ok em ${Date.now() - t0} ms — css ${kb(css.length)}, js ${kb(js.length)} → dist/index.html`);
 }

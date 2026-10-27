@@ -6,7 +6,7 @@ import { References } from '../components/References.tsx';
 import { Icon, Rich } from '../components/ui.tsx';
 import { performanceLabel } from '../lib/quiz.ts';
 import { href } from '../lib/router.ts';
-import { PrintModeProvider, useProgress } from '../lib/store.tsx';
+import { PrintModeProvider, isEmbedded, useProgress } from '../lib/store.tsx';
 import { NotFound } from './NotFound.tsx';
 
 function PrintShell({ title, back, children }: { title: string; back: string; children?: ReactNode }) {
@@ -20,10 +20,18 @@ function PrintShell({ title, back, children }: { title: string; back: string; ch
           <a href={back} className="btn btn-ghost">
             <Icon name="chevronLeft" className="h-5 w-5" /> Voltar
           </a>
-          <button type="button" className="btn btn-brand" onClick={() => print()} data-testid="botao-imprimir">
-            <Icon name="print" className="h-5 w-5" /> Imprimir / Salvar como PDF
-          </button>
-          <span className="text-sm text-mute">Formato A4 · fundo branco · sem menus. No diálogo, escolha “Salvar como PDF”.</span>
+          {isEmbedded() ? (
+            <span className="text-sm text-soft">
+              Pré-visualização do material em A4. Esta versão hospedada não abre o diálogo de impressão: para imprimir ou salvar em PDF, use o MAPD-Flix publicado na Vercel ou executado localmente.
+            </span>
+          ) : (
+            <>
+              <button type="button" className="btn btn-brand" onClick={() => print()} data-testid="botao-imprimir">
+                <Icon name="print" className="h-5 w-5" /> Imprimir / Salvar como PDF
+              </button>
+              <span className="text-sm text-mute">Formato A4 · fundo branco · sem menus. No diálogo, escolha “Salvar como PDF”.</span>
+            </>
+          )}
         </div>
       </div>
       <PrintModeProvider value={true}>

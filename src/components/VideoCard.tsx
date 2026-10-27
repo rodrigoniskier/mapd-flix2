@@ -1,6 +1,6 @@
 import { useState } from 'react';
 import type { Video } from '../domain/types.ts';
-import { usePrintMode } from '../lib/store.tsx';
+import { isEmbedded, usePrintMode } from '../lib/store.tsx';
 import { Icon, formatDuration } from './ui.tsx';
 
 /**
@@ -43,7 +43,22 @@ export function VideoCard({ video, topicFallback }: { video?: Video; topicFallba
   return (
     <div className="card-surface overflow-hidden" data-component="video">
       <div className="relative aspect-video w-full bg-black">
-        {load ? (
+        {isEmbedded() ? (
+          <a
+            href={video.url}
+            target="_blank"
+            rel="noopener noreferrer"
+            className="group absolute inset-0 grid place-items-center bg-gradient-to-br from-panel-2 to-ink text-white"
+          >
+            <span className="flex flex-col items-center gap-3 px-6 text-center">
+              <span className="grid h-16 w-16 place-items-center rounded-full bg-brand shadow-xl">
+                <Icon name="play" className="h-7 w-7" />
+              </span>
+              <span className="text-sm font-semibold">Assistir no YouTube ({formatDuration(video.durationSeconds)})</span>
+              <span className="max-w-md text-xs text-mute">Nesta versão hospedada o player não pode ser incorporado; o vídeo abre em nova aba.</span>
+            </span>
+          </a>
+        ) : load ? (
           <iframe
             className="absolute inset-0 h-full w-full"
             src={`https://www.youtube-nocookie.com/embed/${video.youtubeId}?rel=0&modestbranding=1&autoplay=1&hl=pt-BR&cc_lang_pref=pt&cc_load_policy=1`}

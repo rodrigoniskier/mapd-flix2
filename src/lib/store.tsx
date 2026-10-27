@@ -71,3 +71,6 @@ export const PrintModeProvider = ({ value, children }: { value: boolean; childre
   <PrintCtx.Provider value={value}>{children}</PrintCtx.Provider>
 );
 export const usePrintMode = () => useContext(PrintCtx);
+
+/** Verdadeiro quando o app roda em ambiente hospedado restrito (sem diálogo de impressão nem iframes externos). */
+export const isEmbedded = (): boolean => !!(globalThis as { __MAPD_EMBED__?: boolean }).__MAPD_EMBED__;
