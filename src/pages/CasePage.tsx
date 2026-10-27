@@ -5,6 +5,8 @@ import { Figure } from '../components/blocks.tsx';
 import { References } from '../components/References.tsx';
 import { Icon, ProgressBar, Rich } from '../components/ui.tsx';
 import { href } from '../lib/router.ts';
+import { Photo } from '../components/Photo.tsx';
+import { photoFor } from '../data/media.ts';
 import { useProgress } from '../lib/store.tsx';
 import { NotFound } from './NotFound.tsx';
 
@@ -70,8 +72,11 @@ export function CasePage({ id }: { id: string }) {
 
   return (
     <article className="pb-10">
-      <header className="relative -mt-16 overflow-hidden" style={{ background: `radial-gradient(circle at 85% 10%, ${s.theme.to}44, transparent 55%), linear-gradient(180deg, ${s.theme.from}, #07080d)` }}>
-        <div className="container-page pb-8 pt-28">
+      <header className="relative overflow-hidden">
+        <Photo photo={photoFor(c.id)} className="absolute inset-0 h-full w-full" eager />
+        <div className="absolute inset-0 bg-gradient-to-r from-black/90 via-black/60 to-black/20" />
+        <div className="absolute inset-x-0 bottom-0 h-32 bg-gradient-to-t from-ink to-transparent" />
+        <div className="container-page relative pb-10 pt-28 md:pt-36">
           <nav aria-label="Trilha" className="text-sm text-mute">
             <a href={href.home()} className="hover:text-white">Início</a> <span aria-hidden="true">›</span>{' '}
             <a href={href.series(s.id)} className="hover:text-white">{s.title}</a> <span aria-hidden="true">›</span> Caso clínico
@@ -79,7 +84,7 @@ export function CasePage({ id }: { id: string }) {
           <div className="mt-3 chip bg-black/40">
             <Icon name="stethoscope" className="h-3.5 w-3.5" /> Episódio especial · {c.setting}
           </div>
-          <h1 className="mt-3 max-w-4xl font-display text-3xl font-extrabold md:text-5xl">{c.title}</h1>
+          <h1 className="mt-3 max-w-4xl font-title text-[clamp(2.6rem,7vw,4.5rem)] leading-[0.95] tracking-wide text-white [overflow-wrap:anywhere]">{c.title}</h1>
           <p className="mt-3 max-w-2xl text-lg text-white/90">{c.hook}</p>
           <div className="mt-5 max-w-md">
             <div className="mb-1 flex justify-between text-sm">

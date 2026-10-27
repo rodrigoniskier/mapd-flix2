@@ -8,8 +8,8 @@ Execução: 27/10/2026, Node.js 22.23, Chromium (Playwright 1.63), build de prod
 |---|---|
 | Type-check (`tsc --noEmit`, modo estrito) | ✅ sem erros |
 | Build de produção | ✅ CSS 57 kB + JS 572 kB embutidos em `dist/index.html` |
-| Testes unitários | ✅ 30/30 |
-| Testes de navegação (E2E) | ✅ 13/13 (≈ 80 s) |
+| Testes unitários | ✅ 34/34 |
+| Testes de navegação (E2E) | ✅ 16/16 (≈ 2 min) |
 | Rotas internas visitadas pelo rastreador | 71, nenhuma quebrada |
 | Erros de console da aplicação | 0 (apenas falhas externas esperadas sem internet: fontes web) |
 
@@ -101,3 +101,13 @@ Artefatos gerados em `test-results/` (PDFs de impressão, capturas em 375/768/14
 - Leitores de tela reais (NVDA/VoiceOver) e auditoria completa WCAG (axe não estava disponível offline).
 - Reprodução real dos vídeos (sem acesso ao YouTube no ambiente de testes; verificação feita no navegador do usuário).
 - Navegadores Safari/Firefox.
+
+## Versão 1.1 — interface de streaming
+
+Novos testes:
+
+- Unitários: migração do progresso v2 → v3; Minha lista, avaliação, lembrete e progresso de leitura; perfis (ids únicos, persistência, migração do progresso antigo); Top 10 calculado a partir das questões dos desafios.
+- E2E 14: tela “Quem está estudando?”, foto do professor carregada, criação de perfil, abertura animada que termina sozinha e não se repete na sessão, janela “Sobre o professor” com nome, instituição e e-mail, saída do perfil.
+- E2E 15: “Pular abertura” e abertura curta com movimento reduzido.
+- E2E 16: Top 10 com 10 itens, Minha lista (adicionar pela série e pelo episódio, fileira no início, remover), lembrete de “Em breve”.
+- Testes existentes ajustados: janela da série (abre, fecha com Esc), progresso por perfil (chave `mapdflix:progress:<perfil>`, versão 3), “Continuar estudando” a partir da leitura parcial.

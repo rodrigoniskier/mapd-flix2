@@ -8,7 +8,7 @@
 import type { QuizResult } from '../domain/types.ts';
 
 export const STORAGE_KEY = 'mapdflix:progress';
-export const CURRENT_VERSION = 2;
+export const CURRENT_VERSION = 3;
 
 export type RecentKind = 'episode' | 'case' | 'quiz' | 'series';
 
@@ -34,6 +34,14 @@ export interface ProgressState {
   quizzes: Record<string, { best: number; attempts: QuizResult[] }>;
   cases: Record<string, CaseProgress>;
   recent: RecentItem[];
+  /** “Minha lista”: chaves no formato `tipo:id` (ex.: `series:autoimunidade`). */
+  myList: string[];
+  /** Avaliações “gostei/não gostei” por chave `tipo:id`. */
+  ratings: Record<string, 'up' | 'down'>;
+  /** Lembretes de séries “Em breve”. */
+  reminders: string[];
+  /** Fração lida de cada episódio (0–1), para a barra “Continuar assistindo”. */
+  reading: Record<string, number>;
 }
 
 export interface KeyValueStore {
@@ -48,6 +56,10 @@ export const emptyProgress = (): ProgressState => ({
   quizzes: {},
   cases: {},
   recent: [],
+  myList: [],
+  ratings: {},
+  reminders: [],
+  reading: {},
 });
 
 /** Formato v1 (protótipo): apenas lista de episódios concluídos e pontuações. */
@@ -61,7 +73,8 @@ interface ProgressV1 {
 export function migrate(raw: unknown): ProgressState {
   if (!raw || typeof raw !== 'object') return emptyProgress();
   const v = (raw as { version?: unknown }).version;
-  if (v === CURRENT_VERSION) {
+  if (v === CURRENT_VERSION || v === 2) {
+    // v2 → v3: acrescenta Minha lista, avaliações, lembretes e progresso de leitura.
     const s = raw as Partial<ProgressState>;
     return {
       ...emptyProgress(),
@@ -72,6 +85,10 @@ export function migrate(raw: unknown): ProgressState {
       quizzes: s.quizzes ?? {},
       cases: s.cases ?? {},
       recent: Array.isArray(s.recent) ? s.recent : [],
+      myList: Array.isArray(s.myList) ? s.myList : [],
+      ratings: s.ratings ?? {},
+      reminders: Array.isArray(s.reminders) ? s.reminders : [],
+      reading: s.reading ?? {},
     };
   }
   if (v === 1) {
@@ -108,18 +125,18 @@ export function defaultStore(): KeyValueStore {
   }
 }
 
-export function load(store: KeyValueStore): ProgressState {
+export function load(store: KeyValueStore, key: string = STORAGE_KEY): ProgressState {
   try {
-    const txt = store.getItem(STORAGE_KEY);
+    const txt = store.getItem(key);
     return txt ? migrate(JSON.parse(txt)) : emptyProgress();
   } catch {
     return emptyProgress();
   }
 }
 
-export function save(store: KeyValueStore, state: ProgressState): void {
+export function save(store: KeyValueStore, state: ProgressState, key: string = STORAGE_KEY): void {
   try {
-    store.setItem(STORAGE_KEY, JSON.stringify(state));
+    store.setItem(key, JSON.stringify(state));
   } catch {
     /* armazenamento indisponível ou cheio: o app segue funcionando em memória */
   }
@@ -172,3 +189,28 @@ export function completion(s: ProgressState, episodeIds: string[]): number {
   if (episodeIds.length === 0) return 0;
   return episodeIds.filter((id) => s.episodes[id]).length / episodeIds.length;
 }
+
+export function toggleMyList(s: ProgressState, key: string): ProgressState {
+  return { ...s, myList: s.myList.includes(key) ? s.myList.filter((k) => k !== key) : [key, ...s.myList] };
+}
+
+export function rate(s: ProgressState, key: string, value: 'up' | 'down'): ProgressState {
+  const ratings = { ...s.ratings };
+  if (ratings[key] === value) delete ratings[key];
+  else ratings[key] = value;
+  return { ...s, ratings };
+}
+
+export function toggleReminder(s: ProgressState, id: string): ProgressState {
+  return { ...s, reminders: s.reminders.includes(id) ? s.reminders.filter((k) => k !== id) : [...s.reminders, id] };
+}
+
+/** Registra o quanto do episódio foi lido (só aumenta). */
+export function setReading(s: ProgressState, episodeId: string, fraction: number): ProgressState {
+  const f = Math.max(0, Math.min(1, fraction));
+  if ((s.reading[episodeId] ?? 0) >= f - 0.01) return s;
+  return { ...s, reading: { ...s.reading, [episodeId]: f } };
+}
+
+/** Chave de armazenamento por perfil (perfis à la streaming). */
+export const storageKeyFor = (profileId: string) => `${STORAGE_KEY}:${profileId}`;

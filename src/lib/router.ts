@@ -10,6 +10,8 @@ export type Route =
   | { name: 'quiz'; id: string }
   | { name: 'search'; q: string }
   | { name: 'about' }
+  | { name: 'my-list' }
+  | { name: 'browse'; kind: 'series' | 'casos' | 'desafios' }
   | { name: 'print-episode'; id: string }
   | { name: 'print-series'; id: string; mode: 'resumo' | 'completo' }
   | { name: 'print-quiz'; id: string; answers: boolean }
@@ -43,6 +45,12 @@ export function parseHash(hash: string): Route {
     case 'sobre':
       if (seg.length === 1) return { name: 'about' };
       break;
+    case 'minha-lista':
+      if (seg.length === 1) return { name: 'my-list' };
+      break;
+    case 'navegar':
+      if (b === 'series' || b === 'casos' || b === 'desafios') return { name: 'browse', kind: b };
+      break;
     case 'imprimir':
       if (b === 'episodio' && c) return { name: 'print-episode', id: c };
       if (b === 'serie' && c) return { name: 'print-series', id: c, mode: seg[3] === 'completo' ? 'completo' : 'resumo' };
@@ -61,6 +69,8 @@ export const href = {
   quiz: (id: string) => `#/quiz/${id}`,
   search: (q = '') => (q ? `#/busca?q=${encodeURIComponent(q)}` : '#/busca'),
   about: () => '#/sobre',
+  myList: () => '#/minha-lista',
+  browse: (kind: 'series' | 'casos' | 'desafios') => `#/navegar/${kind}`,
   printEpisode: (id: string) => `#/imprimir/episodio/${id}`,
   printSeries: (id: string, mode: 'resumo' | 'completo') => `#/imprimir/serie/${id}/${mode}`,
   printQuiz: (id: string, answers: boolean) => `#/imprimir/quiz/${id}${answers ? '?gabarito=1' : ''}`,

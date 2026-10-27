@@ -186,3 +186,66 @@ test('rotas: parse e geração são consistentes', () => {
   assert.deepEqual(parseHash(href.printSeries('autoimunidade', 'completo')), { name: 'print-series', id: 'autoimunidade', mode: 'completo' });
   assert.equal(parseHash('#/qualquer/coisa').name, 'not-found');
 });
+
+/* ---------------- v3: Minha lista, avaliações, leitura, perfis ---------------- */
+import { rate, setReading, storageKeyFor, toggleMyList, toggleReminder } from '../../src/lib/progress.ts';
+import { defaultProfiles, loadProfiles, migrateLegacyProgress, newProfile, saveCustomProfiles } from '../../src/lib/profiles.ts';
+import { top10 } from '../../src/pages/top10.ts';
+
+test('progresso v2 migra para v3 preservando dados', () => {
+  const v2 = { version: 2, episodes: { a: { completedAt: 'x' } }, activities: {}, quizzes: {}, cases: {}, recent: [] };
+  const s = migrate(v2);
+  assert.equal(s.version, 3);
+  assert.ok(s.episodes.a);
+  assert.deepEqual(s.myList, []);
+  assert.deepEqual(s.reading, {});
+});
+
+test('Minha lista, avaliação, lembrete e leitura', () => {
+  let s = emptyProgress();
+  s = toggleMyList(s, 'series:autoimunidade');
+  s = toggleMyList(s, 'episode:x');
+  assert.deepEqual(s.myList, ['episode:x', 'series:autoimunidade']);
+  s = toggleMyList(s, 'episode:x');
+  assert.deepEqual(s.myList, ['series:autoimunidade']);
+  s = rate(s, 'k', 'up');
+  assert.equal(s.ratings.k, 'up');
+  s = rate(s, 'k', 'up');
+  assert.equal(s.ratings.k, undefined);
+  s = toggleReminder(s, 'imunidade-antitumoral');
+  assert.deepEqual(s.reminders, ['imunidade-antitumoral']);
+  s = setReading(s, 'e', 0.4);
+  s = setReading(s, 'e', 0.2); // não regride
+  assert.equal(s.reading.e, 0.4);
+  s = setReading(s, 'e', 1.7);
+  assert.equal(s.reading.e, 1);
+});
+
+test('perfis: padrão, criação com id único, persistência e migração do progresso antigo', () => {
+  const store = new Mem();
+  const defs = defaultProfiles('img/p.webp', 'Rodrigo');
+  assert.deepEqual(loadProfiles(store, defs).map((p) => p.id), ['professor', 'estudante']);
+  const all = [...defs];
+  const ana = newProfile('  Ana   Clara ', all);
+  all.push(ana);
+  const ana2 = newProfile('Ana Clara', all);
+  assert.equal(ana.id, 'ana-clara');
+  assert.equal(ana2.id, 'ana-clara-2');
+  assert.equal(ana.name, 'Ana Clara');
+  saveCustomProfiles(store, all, defs);
+  assert.deepEqual(loadProfiles(store, defs).map((p) => p.id), ['professor', 'estudante', 'ana-clara']);
+  store.setItem(STORAGE_KEY, '{"version":2}');
+  migrateLegacyProgress(store, 'estudante');
+  assert.equal(store.getItem(storageKeyFor('estudante')), '{"version":2}');
+  migrateLegacyProgress(store, 'professor');
+  assert.equal(store.getItem(storageKeyFor('professor')), null);
+});
+
+test('Top 10: episódios mais citados nas questões dos desafios, em ordem decrescente', () => {
+  const t = top10();
+  assert.equal(t.length, 10);
+  for (let i = 1; i < t.length; i++) assert.ok(t[i - 1].count >= t[i].count);
+  const counts = new Map<string, number>();
+  for (const q of allQuizzes.flatMap((x) => x.questions)) for (const e of q.relatedEpisodes) counts.set(e, (counts.get(e) ?? 0) + 1);
+  assert.equal(t[0].count, Math.max(...counts.values()));
+});

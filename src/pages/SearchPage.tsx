@@ -18,7 +18,7 @@ export function SearchPage({ q }: { q: string }) {
   }, [q]);
 
   return (
-    <div className="container-page max-w-4xl pb-10 pt-8">
+    <div className="container-page max-w-4xl pb-10 pt-24">
       <h1 className="font-display text-3xl font-extrabold">Buscar temas e conceitos</h1>
       <form
         role="search"

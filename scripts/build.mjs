@@ -37,8 +37,11 @@ function extractCandidates() {
   for (const file of walk(src)) {
     if (!/\.(tsx?|css)$/.test(file)) continue;
     const text = fs.readFileSync(file, 'utf8');
-    for (const tok of text.split(/[\s"'`{}()<>,;=]+/)) {
-      if (tok && tok.length < 120 && /^[!a-z@\[-]/.test(tok)) set.add(tok.replace(/^!/, ''));
+    // Divide só em espaços, aspas e chaves: preserva valores arbitrários como text-[clamp(4rem,10vw,8rem)].
+    for (const raw of text.split(/[\s"'`{}<>;]+/)) {
+      for (const tok of [raw, raw.replace(/^[^a-z!@\[-]+/, '').replace(/[),.:]+$/, '')]) {
+        if (tok && tok.length < 160 && /^[!a-z@\[-]/.test(tok)) set.add(tok.replace(/^!/, ''));
+      }
     }
   }
   return [...set];
@@ -78,11 +81,11 @@ async function buildJs(minify = true) {
 const HEAD = (css) => `<meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <meta name="description" content="MAPD-Flix: Imunologia Clínica em formato de séries — autoimunidade, imunodeficiências e hipersensibilidades.">
-<meta name="theme-color" content="#07080d">
+<meta name="theme-color" content="#141414">
 <title>MAPD-Flix</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Sora:wght@600;700;800&display=swap">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Inter:wght@400;500;600;700;800;900&display=swap">
 <link rel="icon" href="data:image/svg+xml,${encodeURIComponent(fs.readFileSync(path.join(root, 'public', 'favicon.svg'), 'utf8'))}">
 <style>${css}</style>`;
 
@@ -92,6 +95,8 @@ async function main() {
   // Evita que a sequência "</script" dentro do bundle feche a tag inline.
   const safeJs = js.replace(/<\/script/gi, '<\\/script');
   fs.mkdirSync(dist, { recursive: true });
+  // Fotografias e avatar (servidos ao lado da página).
+  fs.cpSync(path.join(root, 'public', 'img'), path.join(dist, 'img'), { recursive: true });
   const body = `<div id="root"></div>\n<script>${safeJs}</script>`;
   fs.writeFileSync(
     path.join(dist, 'index.html'),

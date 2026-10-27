@@ -4,23 +4,25 @@
 /* Design tokens — MAPD-Flix                                           */
 /* ------------------------------------------------------------------ */
 @theme {
-  --font-display: 'Sora', 'Segoe UI', system-ui, sans-serif;
+  /* Layout: interface de streaming — fundo carvão, faixas horizontais, vermelho como única cor de destaque */
+  --font-display: 'Inter', 'Segoe UI', system-ui, sans-serif;
+  --font-title: 'Bebas Neue', 'Oswald', 'Arial Narrow', Impact, sans-serif;
   --font-sans: 'Inter', 'Segoe UI', system-ui, -apple-system, sans-serif;
 
-  --color-ink: #07080d;          /* fundo base */
-  --color-panel: #0f1119;        /* superfícies */
-  --color-panel-2: #161a26;      /* superfícies elevadas */
-  --color-line: #262b3b;         /* bordas */
-  --color-mute: #9aa3b8;         /* texto secundário (contraste ≥ 7:1 no fundo) */
-  --color-soft: #c9cfdd;         /* texto corrido */
-  --color-brand: #ff3d5a;        /* acento MAPD (vermelho-coral próprio) */
-  --color-brand-2: #ffb547;      /* acento secundário (âmbar) */
-  --color-ok: #34d399;
-  --color-warn: #fbbf24;
-  --color-bad: #f87171;
-  --color-info: #60a5fa;
+  --color-ink: #141414;          /* fundo base (carvão) */
+  --color-panel: #181818;        /* cartões e janelas */
+  --color-panel-2: #2a2a2a;      /* superfícies elevadas / hover */
+  --color-line: #333333;         /* divisores */
+  --color-mute: #a3a3a3;         /* texto secundário (≥ 7:1 sobre o fundo) */
+  --color-soft: #e5e5e5;         /* texto corrido */
+  --color-brand: #e3122b;        /* vermelho MAPD */
+  --color-brand-2: #ff6b78;      /* vermelho claro para rótulos */
+  --color-ok: #46d369;           /* “concluído” / relevância */
+  --color-warn: #f5c518;
+  --color-bad: #ff5a5f;
+  --color-info: #54b9ff;
 
-  --shadow-card: 0 10px 30px -10px rgb(0 0 0 / 0.7);
+  --shadow-card: 0 14px 28px rgb(0 0 0 / 0.75);
 }
 
 @layer base {
@@ -57,15 +59,9 @@
 @layer components {
   .container-page {
     width: 100%;
-    max-width: 1400px;
     margin-inline: auto;
-    padding-inline: 16px;
-  }
-  @media (min-width: 768px) {
-    .container-page { padding-inline: 32px; }
-  }
-  @media (min-width: 1280px) {
-    .container-page { padding-inline: 48px; }
+    padding-left: max(16px, 4vw, env(safe-area-inset-left, 0px));
+    padding-right: max(16px, 4vw, env(safe-area-inset-right, 0px));
   }
 
   .btn {
@@ -73,31 +69,45 @@
     align-items: center;
     justify-content: center;
     gap: 0.5rem;
-    border-radius: 0.6rem;
-    padding: 0.65rem 1.1rem;
-    font-weight: 600;
-    font-size: 0.95rem;
+    border-radius: 4px;
+    padding: 0.6rem 1.4rem;
+    font-weight: 700;
+    font-size: 1rem;
     line-height: 1.2;
-    transition: transform 0.15s ease, background-color 0.15s ease, border-color 0.15s ease;
+    transition: background-color 0.15s ease, opacity 0.15s ease, transform 0.15s ease;
     min-height: 44px;
     text-decoration: none;
     cursor: pointer;
   }
   .btn:active { transform: scale(0.98); }
-  .btn-primary { background: #fff; color: #0b0c12; }
-  .btn-primary:hover { background: #e7e9f0; }
+  .btn-primary { background: #fff; color: #000; }
+  .btn-primary:hover { background: rgb(255 255 255 / 0.75); }
   .btn-brand { background: var(--color-brand); color: #fff; }
-  .btn-brand:hover { background: #ff5872; }
-  .btn-ghost { background: rgb(255 255 255 / 0.08); color: #fff; border: 1px solid rgb(255 255 255 / 0.14); }
-  .btn-ghost:hover { background: rgb(255 255 255 / 0.15); }
+  .btn-brand:hover { background: #c40f24; }
+  .btn-ghost { background: rgb(109 109 110 / 0.7); color: #fff; }
+  .btn-ghost:hover { background: rgb(109 109 110 / 0.45); }
+  .icon-btn {
+    display: inline-grid;
+    place-items: center;
+    width: 2.6rem;
+    height: 2.6rem;
+    border-radius: 999px;
+    border: 2px solid rgb(255 255 255 / 0.6);
+    background: rgb(42 42 42 / 0.65);
+    color: #fff;
+    transition: border-color 0.15s ease, background-color 0.15s ease;
+    cursor: pointer;
+  }
+  .icon-btn:hover { border-color: #fff; background: rgb(255 255 255 / 0.12); }
+  .icon-btn[aria-pressed='true'] { border-color: #fff; }
   .btn[disabled], .btn[aria-disabled='true'] { opacity: 0.5; cursor: not-allowed; }
 
   .chip {
     display: inline-flex;
     align-items: center;
     gap: 0.35rem;
-    border-radius: 999px;
-    padding: 0.2rem 0.65rem;
+    border-radius: 4px;
+    padding: 0.2rem 0.6rem;
     font-size: 0.75rem;
     font-weight: 600;
     letter-spacing: 0.02em;
@@ -110,8 +120,8 @@
 
   .card-surface {
     background: var(--color-panel);
-    border: 1px solid var(--color-line);
-    border-radius: 1rem;
+    border: 1px solid #262626;
+    border-radius: 6px;
   }
 
   /* Carrossel horizontal acessível (rolagem nativa + snap; funciona com toque) */
@@ -122,11 +132,33 @@
     overscroll-behavior-x: contain;
     scroll-snap-type: x mandatory;
     scroll-padding-inline: 16px;
-    padding-block: 0.5rem 1.25rem;
+    padding-block: 0.4rem 1rem;
     scrollbar-width: thin;
     scrollbar-color: #3a4155 transparent;
   }
   .rail > * { scroll-snap-align: start; flex: 0 0 auto; }
+
+  /* Cartão de título: painel de ações revelado no hover (mouse) ou no foco (teclado) */
+  .title-card__inner { transition: transform 0.25s ease, box-shadow 0.25s ease; }
+  .title-card__panel { transform: translateY(100%); opacity: 0; transition: transform 0.22s ease, opacity 0.22s ease; }
+  .title-card:focus-within .title-card__panel { transform: none; opacity: 1; }
+  @media (hover: hover) and (pointer: fine) {
+    .title-card:hover .title-card__inner { transform: scale(1.06); box-shadow: var(--shadow-card); transition-delay: 0.15s; z-index: 5; }
+    .title-card:hover .title-card__panel { transform: none; opacity: 1; transition-delay: 0.15s; }
+  }
+
+  /* Número do Top 10 (contorno, estilo letreiro) */
+  .rank-number {
+    font-family: var(--font-title);
+    font-size: clamp(9rem, 22vw, 13rem);
+    line-height: 0.78;
+    color: var(--color-ink);
+    -webkit-text-stroke: 4px #595959;
+    paint-order: stroke fill;
+    letter-spacing: -0.06em;
+    flex: none;
+    user-select: none;
+  }
 
   .poster-shine {
     background: linear-gradient(180deg, transparent 35%, rgb(7 8 13 / 0.55) 65%, rgb(7 8 13 / 0.95) 100%);
@@ -142,6 +174,12 @@
     scroll-behavior: auto !important;
   }
 }
+
+@keyframes ken-burns {
+  from { transform: scale(1.02); }
+  to { transform: scale(1.12); }
+}
+.ken-burns { animation: ken-burns 22s ease-out both; transform-origin: 60% 40%; }
 
 @keyframes fade-up {
   from { opacity: 0; transform: translateY(8px); }

@@ -4,13 +4,14 @@ import { videos } from '../data/videos.ts';
 import { allSeries } from '../data/catalog.ts';
 import { References } from '../components/References.tsx';
 import { formatDuration } from '../components/ui.tsx';
+import { photos, professor, unsplashUrl } from '../data/media.ts';
 
 export function AboutPage() {
   useEffect(() => {
     document.title = 'Fontes e metodologia — MAPD-Flix';
   }, []);
   return (
-    <div className="container-page max-w-4xl space-y-10 pb-10 pt-8">
+    <div className="container-page max-w-4xl space-y-10 pb-10 pt-24">
       <header>
         <h1 className="font-display text-3xl font-extrabold md:text-4xl">Fontes, vídeos e metodologia</h1>
         <p className="mt-3 text-lg">
@@ -90,6 +91,34 @@ export function AboutPage() {
           Todas as ilustrações são vetoriais, originais e esquemáticas, criadas para o MAPD-Flix (não são microfotografias). Valores numéricos em gráficos são
           ilustrativos quando assim indicado.
         </p>
+      </section>
+
+      <section aria-labelledby="autor" className="space-y-3">
+        <h2 id="autor" className="text-2xl font-bold">Professor e autor</h2>
+        <div className="card-surface flex flex-col gap-5 p-5 sm:flex-row sm:items-center">
+          <img src={professor.photo} alt={`Foto de ${professor.name}`} className="h-28 w-28 shrink-0 rounded object-cover" />
+          <div className="min-w-0 space-y-1">
+            <div className="text-lg font-bold text-white">{professor.name}</div>
+            <div>{professor.title}</div>
+            <div>{professor.institution}</div>
+            <div>{professor.book}</div>
+            <div className="select-all break-all text-white">{professor.email}</div>
+          </div>
+        </div>
+      </section>
+
+      <section aria-labelledby="fotos" className="space-y-3">
+        <h2 id="fotos" className="text-2xl font-bold">Fotografias</h2>
+        <p>
+          Fotografias reais do <a className="underline" href="https://unsplash.com/license" target="_blank" rel="noopener noreferrer">Unsplash</a> (licença Unsplash: uso livre, inclusive educacional, sem necessidade de autorização). Créditos:
+        </p>
+        <ul className="grid gap-1 text-sm sm:grid-cols-2">
+          {[...new Map(Object.values(photos).map((p) => [p.unsplashId, p])).values()].map((p) => (
+            <li key={p.unsplashId}>
+              <a className="underline hover:text-white" href={unsplashUrl(p)} target="_blank" rel="noopener noreferrer">{p.alt}</a> — {p.author}
+            </li>
+          ))}
+        </ul>
       </section>
 
       <References citations={references.map((r) => ({ ref: r.id }))} title="Todas as referências" />

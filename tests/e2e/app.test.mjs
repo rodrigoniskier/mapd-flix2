@@ -21,8 +21,15 @@ let base;
 /** Erros externos esperados em ambiente sem rede (fontes web, YouTube) não contam. */
 const EXTERNAL = /fonts\.(googleapis|gstatic)|youtube|ERR_TUNNEL|ERR_NAME_NOT_RESOLVED|ERR_INTERNET_DISCONNECTED|net::ERR_/i;
 
-async function open(route, { width = 1366, height = 900 } = {}) {
+async function open(route, { width = 1366, height = 900, profile = 'estudante' } = {}) {
   const page = await browser.newPage({ viewport: { width, height } });
+  if (profile) {
+    // Entra direto no perfil (a abertura e a escolha de perfil têm testes próprios).
+    await page.addInitScript((p) => {
+      sessionStorage.setItem('mapdflix:active-profile', p);
+      sessionStorage.setItem('mapdflix:intro-seen', '1');
+    }, profile);
+  }
   const errors = [];
   page.on('pageerror', (e) => errors.push(`pageerror: ${e.message}`));
   page.on('console', (m) => {
@@ -75,10 +82,16 @@ test('séries disponíveis abrem; séries "em breve" não navegam para páginas 
   const { page, errors } = await open('#/');
   for (const id of ['autoimunidade', 'imunodeficiencias', 'hipersensibilidades']) {
     await go(page, `#/serie/${id}`);
-    assert.equal(await page.locator('[data-episode-card]').count() >= 6, true, id);
-    assert.ok(await page.locator('text=Objetivos de aprendizagem').count());
-    assert.ok(await page.locator('[data-case-card]').count(), `${id}: caso`);
-    assert.ok(await page.locator('[data-quiz-card]').count(), `${id}: quiz`);
+    const modal = page.getByTestId('series-modal');
+    await modal.waitFor();
+    assert.ok((await modal.locator('[data-episode-row]').count()) >= 6, id);
+    assert.ok(await modal.locator('text=Objetivos de aprendizagem').count());
+    assert.ok(await modal.locator('[data-case-card]').count(), `${id}: caso`);
+    assert.ok(await modal.locator('[data-quiz-card]').count(), `${id}: quiz`);
+    // fecha com Esc e volta ao catálogo
+    await page.keyboard.press('Escape');
+    await page.getByTestId('series-modal').waitFor({ state: 'detached' });
+    assert.match(page.url(), /#\/$/);
   }
   for (const id of ['imunidade-antitumoral', 'imunidade-transplantes']) {
     await go(page, `#/serie/${id}`);
@@ -162,15 +175,22 @@ test('progresso persiste localmente após recarregar', async () => {
   await page.reload();
   await page.waitForSelector('#root > *');
   assert.match(await page.getByTestId('marcar-concluido').first().innerText(), /Concluído/);
-  const stored = await page.evaluate(() => JSON.parse(localStorage.getItem('mapdflix:progress')));
-  assert.equal(stored.version, 2);
-  assert.ok(stored.episodes['idef-e1-fundamentos']);
+  const stored = await page.evaluate(() => localStorage.getItem('mapdflix:progress'));
+  const storedKey = 'mapdflix:progress:estudante';
+  assert.equal(stored, null, 'progresso fica na chave do perfil');
+  const perProfile = await page.evaluate((k) => JSON.parse(localStorage.getItem(k)), storedKey);
+  assert.equal(perProfile.version, 3);
+  assert.ok(perProfile.episodes['idef-e1-fundamentos']);
   await go(page, '#/serie/imunodeficiencias');
-  assert.match(await page.locator('main').innerText(), /1\/6 episódios/);
+  assert.match(await page.getByTestId('series-modal').innerText(), /1\/6 concluídos/);
+  // leitura parcial alimenta “Continuar estudando” com barra de progresso
+  await go(page, '#/episodio/idef-e2-primarias');
+  await page.evaluate(() => scrollTo(0, (document.documentElement.scrollHeight - innerHeight) * 0.5));
+  await page.waitForTimeout(700);
   await go(page, '#/');
-  assert.equal(await page.locator('#recentes').count(), 1, 'área de acessados recentemente');
+  assert.equal(await page.locator('#recentes [data-episode-card="idef-e2-primarias"]').count(), 1, 'continuar estudando');
   // migração de versão antiga
-  await page.evaluate(() => localStorage.setItem('mapdflix:progress', JSON.stringify({ version: 1, completed: ['hiper-e2-tipo1'] })));
+  await page.evaluate(() => localStorage.setItem('mapdflix:progress:estudante', JSON.stringify({ version: 1, completed: ['hiper-e2-tipo1'] })));
   await page.reload();
   await page.waitForSelector('#root > *');
   await go(page, '#/episodio/hiper-e2-tipo1');
@@ -335,7 +355,7 @@ test('impressão: layout branco, sem navegação, A4 e PDF gerado', async () => 
 });
 
 test('responsividade: sem rolagem horizontal em smartphone, tablet e desktop', async () => {
-  const routes = ['#/', '#/serie/autoimunidade', '#/episodio/hiper-e3-tipo2', '#/caso/caso-b', '#/quiz/quiz-autoimunidade', '#/busca?q=IgE', '#/sobre'];
+  const routes = ['#/', '#/serie/autoimunidade', '#/episodio/hiper-e3-tipo2', '#/caso/caso-b', '#/quiz/quiz-autoimunidade', '#/busca?q=IgE', '#/sobre', '#/minha-lista', '#/navegar/series'];
   for (const [w, h] of [[375, 812], [768, 1024], [1440, 900]]) {
     const { page, errors } = await open('#/', { width: w, height: h });
     for (const r of routes) {
@@ -373,6 +393,7 @@ test('acessibilidade básica: títulos, nomes acessíveis, foco visível e redu�
   assert.notEqual(outline, 'none');
   // redução de movimento
   await page.emulateMedia({ reducedMotion: 'reduce' });
+  await go(page, '#/');
   const dur = await page.evaluate(() => getComputedStyle(document.querySelector('.btn')).transitionDuration);
   assert.ok(parseFloat(dur) < 0.01, `transição ${dur}`);
   assert.deepEqual(errors, []);
@@ -410,6 +431,91 @@ test('busca por temas e conceitos', async () => {
   assert.ok(await page.locator('[data-search-result]').count());
   await page.locator('[data-search-result]').first().click();
   assert.equal(await page.getByTestId('not-found').count(), 0);
+  assert.deepEqual(errors, []);
+  await page.close();
+});
+
+test('perfis: “Quem está estudando?”, abertura animada e perfil do professor', async () => {
+  const { page, errors } = await open('#/', { profile: null });
+  await page.getByTestId('profile-gate').waitFor();
+  assert.match(await page.locator('h1').innerText(), /Quem está estudando\?/);
+  const prof = page.locator('[data-profile=professor] img');
+  assert.equal(await prof.count(), 1, 'foto do professor');
+  assert.ok(await prof.evaluate((img) => img.complete && img.naturalWidth > 0), 'foto carregada');
+  // novo perfil de estudante
+  await page.getByRole('button', { name: 'Adicionar perfil' }).click();
+  await page.locator('#nome-perfil').fill('Ana');
+  await page.getByRole('button', { name: 'Continuar' }).click();
+  assert.equal(await page.locator('[data-profile=ana]').count(), 1);
+  // entrar como professor → abertura → catálogo
+  await page.locator('[data-profile=professor]').click();
+  await page.getByTestId('intro').waitFor();
+  await page.waitForTimeout(3600);
+  assert.equal(await page.getByTestId('intro').count(), 0, 'abertura termina sozinha');
+  assert.equal(await page.locator('#top10').count(), 1);
+  // a abertura não se repete na mesma sessão
+  await page.reload();
+  await page.waitForSelector('#root > *');
+  assert.equal(await page.getByTestId('intro').count(), 0);
+  // dados do professor
+  await page.getByTestId('menu-perfil').click();
+  await page.getByTestId('abrir-professor').click();
+  const modal = page.getByTestId('professor-modal');
+  const txt = await modal.innerText();
+  assert.match(txt, /Prof\. Rodrigo Niskier Ferreira Barbosa/);
+  assert.match(txt, /rodrigo\.niskier@unipe\.edu\.br/);
+  assert.match(txt, /UNIPÊ/);
+  await page.keyboard.press('Escape');
+  assert.equal(await modal.count(), 0);
+  // progresso separado por perfil
+  await page.getByTestId('menu-perfil').click();
+  await page.getByRole('menuitem', { name: 'Sair do perfil' }).click();
+  await page.getByTestId('profile-gate').waitFor();
+  assert.deepEqual(errors, []);
+  await page.close();
+});
+
+test('abertura pode ser pulada e respeita movimento reduzido', async () => {
+  const { page, errors } = await open('#/', { profile: null });
+  await page.locator('[data-profile=estudante]').click();
+  await page.getByTestId('pular-abertura').click();
+  assert.equal(await page.getByTestId('intro').count(), 0);
+  await page.close();
+  const ctx = await browser.newContext({ reducedMotion: 'reduce' });
+  const p2 = await ctx.newPage();
+  await p2.goto(`${base}/#/`);
+  await p2.locator('[data-profile=estudante]').click();
+  await p2.waitForTimeout(1200);
+  assert.equal(await p2.getByTestId('intro').count(), 0, 'abertura curta com movimento reduzido');
+  await ctx.close();
+  assert.deepEqual(errors, []);
+});
+
+test('Minha lista, avaliações, Top 10 e lembrete de “Em breve”', async () => {
+  const { page, errors } = await open('#/');
+  assert.equal(await page.locator('[data-top10]').count(), 10);
+  // adicionar pela janela da série e pelo episódio
+  await go(page, '#/serie/hipersensibilidades');
+  await page.getByTestId('series-modal').getByRole('button', { name: /Adicionar Hipersensibilidades à Minha lista/ }).click();
+  await page.keyboard.press('Escape');
+  await go(page, '#/episodio/auto-e5-investigacao');
+  await page.getByRole('button', { name: /Adicionar Investigação imunológica à Minha lista/ }).click();
+  await go(page, '#/minha-lista');
+  const list = page.getByTestId('minha-lista');
+  assert.equal(await list.locator('li').count(), 2);
+  assert.equal(await list.locator('[data-episode-card="auto-e5-investigacao"]').count(), 1);
+  assert.equal(await list.locator('[data-series-card="hipersensibilidades"]').count(), 1);
+  await go(page, '#/');
+  assert.equal(await page.locator('#minha-lista li').count(), 2, 'fileira Minha lista no início');
+  // lembrete
+  const remind = page.locator('[data-coming-soon="imunidade-antitumoral"] button');
+  await remind.click();
+  assert.equal(await remind.getAttribute('aria-pressed'), 'true');
+  // remover da lista
+  await go(page, '#/episodio/auto-e5-investigacao');
+  await page.getByRole('button', { name: /Remover Investigação imunológica da Minha lista/ }).click();
+  await go(page, '#/minha-lista');
+  assert.equal(await page.getByTestId('minha-lista').locator('li').count(), 1);
   assert.deepEqual(errors, []);
   await page.close();
 });

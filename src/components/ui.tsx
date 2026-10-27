@@ -83,6 +83,34 @@ const paths: Record<string, ReactNode> = {
     </>
   ),
   menu: <path d="M4 7h16M4 12h16M4 17h16" />,
+  bell: (
+    <>
+      <path d="M6 16V11a6 6 0 1 1 12 0v5l1.5 2h-15z" />
+      <path d="M10 20a2 2 0 0 0 4 0" />
+    </>
+  ),
+  pencil: <path d="M4 20h4L19 9l-4-4L4 16zM14 6l4 4" />,
+  user: (
+    <>
+      <circle cx="12" cy="8" r="4" />
+      <path d="M4 21a8 8 0 0 1 16 0" />
+    </>
+  ),
+  plus: <path d="M12 5v14M5 12h14" />,
+  thumbUp: <path d="M7 11v9H4v-9zM7 11l4-7a2 2 0 0 1 3 2l-1 5h5a2 2 0 0 1 2 2.3l-1.2 6A2 2 0 0 1 16.8 21H7" />,
+  thumbDown: <path d="M17 13V4h3v9zM17 13l-4 7a2 2 0 0 1-3-2l1-5H6a2 2 0 0 1-2-2.3l1.2-6A2 2 0 0 1 7.2 3H17" />,
+  volume: (
+    <>
+      <path d="M4 9v6h4l5 4V5L8 9z" />
+      <path d="M16 9a4 4 0 0 1 0 6M18.5 6.5a8 8 0 0 1 0 11" />
+    </>
+  ),
+  mute: (
+    <>
+      <path d="M4 9v6h4l5 4V5L8 9z" />
+      <path d="M17 9l5 6M22 9l-5 6" />
+    </>
+  ),
   flask: (
     <>
       <path d="M9 3h6M10 3v6l-5 9a2 2 0 0 0 1.7 3h10.6a2 2 0 0 0 1.7-3l-5-9V3" />

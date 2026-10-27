@@ -2,7 +2,9 @@
 
 Plataforma web educacional de **Mecanismos de Agressão, Patológicos e de Defesa** — Imunologia Clínica para estudantes de Medicina, com navegação inspirada em serviços de streaming: séries, episódios, casos clínicos interativos e “filmes especiais” (desafios clínicos).
 
-Identidade visual própria (logo, capas e ilustrações vetoriais originais). Nenhum elemento da Netflix é reutilizado.
+Interface no estilo dos serviços de streaming — fundo carvão, vermelho como destaque, “Quem está estudando?”, abertura animada, destaque em tela cheia, fileiras horizontais, Top 10, Minha lista, cartões que se expandem e janela “Mais informações” com episódios. A marca, a abertura (traçado de monitor cardíaco que forma o anticorpo da marca) e o som (bipes de monitor + acorde, sintetizados) são originais; nenhum logotipo, vinheta ou som da Netflix é reutilizado.
+
+Fotografias reais de cenas clínicas e laboratoriais (Unsplash, licença livre), uma por série, episódio, caso e desafio, com créditos na página “Fontes”. O perfil do professor traz foto e dados do autor.
 
 ## O que há na versão 1.0
 
@@ -13,7 +15,8 @@ Identidade visual própria (logo, capas e ilustrações vetoriais originais). Ne
 | Casos clínicos interativos (7 etapas, revelação progressiva) | 3 |
 | Desafios clínicos (quizzes) | 3 × 12 questões |
 | Questões de fixação dentro dos episódios | 28 |
-| Ilustrações vetoriais originais | 19 mecanismos + 5 capas de série |
+| Ilustrações vetoriais originais (mecanismos) | 19 |
+| Fotografias clínicas reais (Unsplash) | 32 |
 | Vídeos do YouTube verificados (≤ 3 min) | 3 |
 | Séries “Em breve” | 2 — Imunidade Antitumoral, Imunidade nos Transplantes |
 
@@ -34,8 +37,8 @@ Testes:
 
 ```bash
 npm run typecheck    # TypeScript estrito
-npm run test:unit    # 30 testes (conteúdo, progresso, quiz, busca, rotas)
-npm run test:e2e     # 13 testes Playwright no build de produção
+npm run test:unit    # 34 testes (conteúdo, progresso, perfis, quiz, busca, rotas)
+npm run test:e2e     # 16 testes Playwright no build de produção
 ```
 
 Se o navegador do Playwright não estiver instalado: `npx playwright install chromium`.

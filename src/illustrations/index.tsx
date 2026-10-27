@@ -161,18 +161,18 @@ export function EpisodeCover({ theme, illustration, number, title, className = '
   );
 }
 
-/** Marca MAPD-Flix: anticorpo estilizado + logotipo. */
-export function Logo({ className = '' }: { className?: string }) {
+/** Marca MAPD-Flix: anticorpo estilizado + logotipo em caixa alta condensada. */
+export function Logo({ className = '', compact = false }: { className?: string; compact?: boolean }) {
   return (
-    <span className={`inline-flex items-center gap-2 ${className}`} aria-label="MAPD-Flix">
-      <svg viewBox="0 0 64 64" className="h-8 w-8" aria-hidden="true">
-        <path d="M32 34v20M32 34 16 16M32 34l16-18" stroke="#ff3d5a" strokeWidth="8" strokeLinecap="round" fill="none" />
-        <circle cx="16" cy="14" r="6" fill="#ffb547" />
-        <circle cx="48" cy="14" r="6" fill="#ffb547" />
+    <span className={`inline-flex items-center gap-1.5 ${className}`} aria-label="MAPD-Flix">
+      <svg viewBox="0 0 64 64" className="h-7 w-7 shrink-0" aria-hidden="true">
+        <path d="M32 34v22M32 34 14 12M32 34l18-22" stroke="#e3122b" strokeWidth="9" strokeLinecap="round" fill="none" />
       </svg>
-      <span className="font-display text-xl font-extrabold tracking-tight text-white" aria-hidden="true">
-        MAPD<span className="text-brand">·FLIX</span>
-      </span>
+      {!compact && (
+        <span className="hidden font-title text-[1.9rem] leading-none tracking-[0.04em] text-brand min-[420px]:inline" aria-hidden="true">
+          MAPD·FLIX
+        </span>
+      )}
     </span>
   );
 }

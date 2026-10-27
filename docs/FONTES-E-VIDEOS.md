@@ -70,3 +70,9 @@ Verificados em 27/10/2026 diretamente no YouTube (metadados do player oficial): 
 | Hipersensibilidades | ASBAI \| Anafilaxia | ASBAI | 1:35 | https://www.youtube.com/watch?v=6N285p5W0-k | Departamento Científico de Anafilaxia da ASBAI; reconhecimento e conduta, em português. |
 
 Limitação: os vídeos foram verificados por metadados (disponibilidade, duração, canal, permissão de incorporação); a análise do conteúdo falado depende de revisão do docente antes do uso em aula.
+
+## Fotografias
+
+32 fotografias do Unsplash (licença Unsplash: uso gratuito, inclusive comercial e educacional, sem necessidade de autorização; crédito recomendado). Selecionadas por coerência com cada conteúdo e otimizadas para WebP (1280 px). Lista completa com autores e links em `src/data/media.ts` e na página “Fontes” do app. Principais autores: National Cancer Institute, Vitaly Gariev, Hush Naidoo Jade Photography, CDC, Navy Medicine, NIAID.
+
+A foto do perfil do professor foi enviada pelo próprio professor.

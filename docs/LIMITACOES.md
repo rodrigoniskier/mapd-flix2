@@ -10,3 +10,7 @@
 8. **Revisão docente.** O conteúdo foi alinhado à obra-base e a referências verificáveis, mas deve ser revisado pelo autor antes do uso com estudantes, especialmente doses, condutas e informações sobre disponibilidade no SUS (TREC, PCDT), que mudam com o tempo.
 9. **Acessibilidade.** Testes automatizados básicos; não houve auditoria com leitores de tela reais.
 10. **Séries futuras.** Antitumoral e Transplantes aparecem como “Em breve”, sem conteúdo.
+11. **Vinheta e som.** A abertura no estilo “N + tudum” não foi reproduzida por ser marca registrada da Netflix; foi criada uma abertura original. O som só toca após um clique (exigência dos navegadores) e é sintetizado no próprio navegador.
+12. **Fotografias.** São fotos reais de banco de imagens (Unsplash), com modelos e cenários genéricos; não retratam pacientes reais nem as doenças específicas de cada episódio. Créditos em “Fontes”.
+13. **Perfis.** São locais (por navegador). Qualquer pessoa pode abrir o perfil “Rodrigo”; ele não é protegido por senha. O e-mail institucional fica visível na janela “Sobre o professor” e no rodapé.
+14. **Fonte dos títulos.** Bebas Neue é carregada do Google Fonts; sem internet, os títulos usam uma fonte do sistema.
