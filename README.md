@@ -45,6 +45,8 @@ Se o navegador do Playwright não estiver instalado: `npx playwright install chr
 
 ## Publicar na Vercel
 
+Repositório: https://github.com/rodrigoniskier/mapd-flix2 — Site publicado: _ainda não publicado (importar o repositório na Vercel)_.
+
 O projeto é estático (`dist/`). O arquivo `vercel.json` já define `npm run build` e `dist` como saída:
 
 1. Crie um repositório no GitHub e envie este projeto (`git push`).
