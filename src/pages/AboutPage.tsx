@@ -88,8 +88,8 @@ export function AboutPage() {
       <section aria-labelledby="imagens" className="space-y-2">
         <h2 id="imagens" className="text-2xl font-bold">Imagens</h2>
         <p>
-          Todas as ilustrações são vetoriais, originais e esquemáticas, criadas para o MAPD-Flix (não são microfotografias). Valores numéricos em gráficos são
-          ilustrativos quando assim indicado.
+          As figuras dos episódios e dos casos são esquemas didáticos gerados com ferramenta de inteligência artificial a partir de roteiro elaborado para o MAPD-Flix
+          (não são microfotografias nem material de referência). Valores numéricos em gráficos são ilustrativos quando assim indicado.
         </p>
       </section>
 

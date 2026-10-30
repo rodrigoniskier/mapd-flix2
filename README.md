@@ -15,7 +15,7 @@ Fotografias reais de cenas clínicas e laboratoriais (Unsplash, licença livre),
 | Casos clínicos interativos (7 etapas, revelação progressiva) | 3 |
 | Desafios clínicos (quizzes) | 3 × 12 questões |
 | Questões de fixação dentro dos episódios | 28 |
-| Ilustrações vetoriais originais (mecanismos) | 19 |
+| Figuras didáticas (geradas por IA, WebP 1536×1024; ver `docs/FIGURAS.md`) | 19 |
 | Fotografias clínicas reais (Unsplash) | 32 |
 | Vídeos do YouTube verificados (≤ 3 min) | 3 |
 | Séries “Em breve” | 2 — Imunidade Antitumoral, Imunidade nos Transplantes |

@@ -8,6 +8,7 @@ import fs from 'node:fs';
 import { allCases, allEpisodes, allQuizzes, allSeries, availableSeries, comingSoonSeries, episodesOf, neighbors } from '../../src/data/catalog.ts';
 import { referenceById } from '../../src/data/references.ts';
 import { videos } from '../../src/data/videos.ts';
+import { rasterFigureIds } from '../../src/data/figures.ts';
 import type { ContentBlock } from '../../src/domain/types.ts';
 
 const illustrationSource = fs.readFileSync(new URL('../../src/illustrations/mechanisms.tsx', import.meta.url), 'utf8');
@@ -181,4 +182,23 @@ test('navegação anterior/próximo dentro da série', () => {
   assert.equal(neighbors('auto-e1-autotolerancia').next?.id, 'auto-e2-origem');
   assert.equal(neighbors('hiper-e7-tratamento').next, undefined);
   assert.equal(neighbors('hiper-e7-tratamento').prev?.id, 'hiper-e6-diagnostico');
+});
+
+test('figuras rasterizadas: cada figura usada tem arquivo WebP 1536×1024 em public/img/figuras', () => {
+  const used = new Set<string>();
+  for (const e of allEpisodes) for (const b of e.sections.flatMap((s) => s.blocks)) if (b.type === 'figure') used.add(b.visual.illustration);
+  for (const c of allCases) for (const s of c.steps) if (s.visual) used.add(s.visual.illustration);
+  for (const id of used) {
+    assert.ok(rasterFigureIds.has(id), `figura sem imagem: ${id}`);
+    const buf = fs.readFileSync(new URL(`../../public/img/figuras/${id}.webp`, import.meta.url));
+    assert.equal(buf.subarray(0, 4).toString('latin1'), 'RIFF', `${id}: não é WebP`);
+    assert.equal(buf.subarray(8, 12).toString('latin1'), 'WEBP', `${id}: não é WebP`);
+  }
+  for (const id of rasterFigureIds) assert.ok(used.has(id), `imagem não usada: ${id}`);
+});
+
+test('hotspots ficam dentro da imagem (0–100%)', () => {
+  for (const e of allEpisodes) for (const b of e.sections.flatMap((s) => s.blocks)) {
+    if (b.type === 'figure') for (const h of b.visual.hotspots ?? []) assert.ok(h.x >= 0 && h.x <= 100 && h.y >= 0 && h.y <= 100, `${e.id}: ${h.label}`);
+  }
 });

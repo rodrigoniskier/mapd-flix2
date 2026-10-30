@@ -1,5 +1,6 @@
 import { useId, useState } from 'react';
 import type { CalloutVariant, ChainStage, ContentBlock, Question, VisualResource } from '../domain/types.ts';
+import { figureSrc } from '../data/figures.ts';
 import { Illustration } from '../illustrations/index.tsx';
 import { usePrintMode } from '../lib/store.tsx';
 import { Icon, Rich } from './ui.tsx';
@@ -275,10 +276,16 @@ export function Figure({ visual }: { visual: VisualResource }) {
   const print = usePrintMode();
   const [active, setActive] = useState<number | null>(null);
   const hs = visual.hotspots ?? [];
+  const src = figureSrc(visual.illustration);
   return (
     <figure className="avoid-break max-w-4xl" data-component="figure">
-      <div className="relative rounded-2xl border border-line bg-[#0b0e16] p-2 text-soft md:p-4 print:bg-white print:text-black">
-        <Illustration id={visual.illustration} title={visual.alt} className="h-auto w-full" />
+      <div className={`rounded-2xl border border-line p-2 print:bg-white print:text-black ${src ? 'bg-[#f7f8fa] md:p-3' : 'bg-[#0b0e16] text-soft md:p-4'}`}>
+       <div className="relative">
+        {src ? (
+          <img src={src} alt={visual.alt} width={1536} height={1024} loading="lazy" decoding="async" className="h-auto w-full rounded-lg" data-figure-raster={visual.illustration} />
+        ) : (
+          <Illustration id={visual.illustration} title={visual.alt} className="h-auto w-full" />
+        )}
         {!print &&
           hs.map((h, i) => (
             <button
@@ -295,6 +302,7 @@ export function Figure({ visual }: { visual: VisualResource }) {
               {i + 1}
             </button>
           ))}
+       </div>
       </div>
       {!print && hs.length > 0 && (
         <div className="mt-2 min-h-[3rem] rounded-xl bg-white/[0.04] px-4 py-3 text-[0.95rem]" aria-live="polite">

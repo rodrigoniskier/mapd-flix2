@@ -14,3 +14,4 @@
 12. **Fotografias.** São fotos reais de banco de imagens (Unsplash), com modelos e cenários genéricos; não retratam pacientes reais nem as doenças específicas de cada episódio. Créditos em “Fontes”.
 13. **Perfis.** São locais (por navegador). Qualquer pessoa pode abrir o perfil “Rodrigo”; ele não é protegido por senha. O e-mail institucional fica visível na janela “Sobre o professor” e no rodapé.
 14. **Contraste sobre fotos.** A auditoria mede o fundo real atrás de cada texto nas telas testadas; fotos novas ou trocadas devem passar de novo pela auditoria (`scripts/contraste`).
+- **Figuras geradas por IA.** As 19 figuras didáticas foram geradas por IA a partir de roteiro editorial e conferidas visualmente (rótulos em português, valores dos gráficos); não houve revisão por especialista. São esquemas, não microfotografias; a revisão científica pelo autor é recomendada antes de uso formal (ver `docs/FIGURAS.md`).

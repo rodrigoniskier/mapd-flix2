@@ -113,12 +113,15 @@ test('os 19 episódios abrem com todas as seções e figuras renderizadas', asyn
     }
     const figs = await page.locator('figure[data-component=figure]').count();
     assert.ok(figs >= 1, `${id}: figura`);
-    const svgs = page.locator('figure[data-component=figure] svg[data-illustration]');
-    assert.equal(await svgs.count(), figs, `${id}: todas as figuras têm SVG`);
-    for (const svg of await svgs.all()) {
-      const box = await svg.boundingBox();
-      assert.ok(box && box.width > 100 && box.height > 50, `${id}: SVG com dimensão`);
-      assert.ok((await svg.getAttribute('aria-label'))?.length > 20, `${id}: aria-label`);
+    const imgs = page.locator('figure[data-component=figure] img[data-figure-raster]');
+    assert.equal(await imgs.count(), figs, `${id}: todas as figuras são imagens`);
+    for (const img of await imgs.all()) {
+      await img.scrollIntoViewIfNeeded();
+      await img.evaluate((el) => (el.complete && el.naturalWidth > 0 ? true : new Promise((ok, no) => { el.onload = () => ok(true); el.onerror = () => no(new Error('imagem não carregou')); })));
+      const box = await img.boundingBox();
+      assert.ok(box && box.width > 100 && box.height > 50, `${id}: imagem com dimensão`);
+      assert.equal(await img.evaluate((el) => el.naturalWidth), 1536, `${id}: imagem 1536 px`);
+      assert.ok((await img.getAttribute('alt'))?.length > 20, `${id}: alt`);
     }
     assert.ok(await page.locator('[data-component=chain]').count(), `${id}: cadeia causal`);
   }
@@ -332,7 +335,7 @@ test('impressão: layout branco, sem navegação, A4 e PDF gerado', async () => 
   assert.equal(await page.locator('[data-no-print]').isVisible(), false, 'barra de ferramentas oculta na impressão');
   // componentes abertos na impressão
   assert.equal(await page.locator('[data-component=expandable] button').count(), 0);
-  assert.ok(await page.locator('figure svg[data-illustration]').count());
+  assert.ok(await page.locator('figure img[data-figure-raster]').count());
   const pdf = await page.pdf({ format: 'A4', printBackground: true, preferCSSPageSize: true });
   fs.writeFileSync(path.join(OUT, 'episodio-auto-e5.pdf'), pdf);
   const pages = (pdf.toString('latin1').match(/\/Type\s*\/Page[^s]/g) || []).length;
