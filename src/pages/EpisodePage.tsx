@@ -1,7 +1,8 @@
-import { useEffect, useState } from 'react';
+import { useCallback, useEffect, useState } from 'react';
 import { getEpisode, getSeries, neighbors, episodesOf } from '../data/catalog.ts';
 import { EpisodeContent, episodeSectionAnchors } from '../components/EpisodeContent.tsx';
 import { Icon } from '../components/ui.tsx';
+import { SlideShow } from '../components/SlideShow.tsx';
 import { Photo } from '../components/Photo.tsx';
 import { ListButton, RateButton } from '../components/Cards.tsx';
 import { photoFor } from '../data/media.ts';
@@ -13,6 +14,10 @@ export function EpisodePage({ id }: { id: string }) {
   const ep = getEpisode(id);
   const { state, setCompleted, visit, readEpisode } = useProgress();
   const [read, setRead] = useState(0);
+  const [slides, setSlides] = useState(false);
+  const closeSlides = useCallback(() => setSlides(false), []);
+  // Ao trocar de episódio, volta ao modo de navegação.
+  useEffect(() => setSlides(false), [id]);
   useEffect(() => {
     if (ep) {
       document.title = `Ep. ${ep.number}: ${ep.title} — MAPD-Flix`;
@@ -94,6 +99,9 @@ export function EpisodePage({ id }: { id: string }) {
             </div>
             <div className="mt-5 flex flex-wrap items-center gap-3">
               {completeBtn}
+              <button type="button" onClick={() => setSlides(true)} className="btn btn-ghost" data-testid="ver-tela-cheia">
+                <Icon name="expand" className="h-5 w-5" /> Ver em tela cheia
+              </button>
               <a href={href.printEpisode(ep.id)} className="btn btn-ghost" data-testid="imprimir-episodio">
                 <Icon name="print" className="h-5 w-5" /> Imprimir
               </a>
@@ -152,6 +160,7 @@ export function EpisodePage({ id }: { id: string }) {
           <Icon name="play" className="h-5 w-5" /> Próximo episódio
         </a>
       )}
+      {slides && <SlideShow episode={ep} series={s} onClose={closeSlides} />}
     </article>
   );
 }

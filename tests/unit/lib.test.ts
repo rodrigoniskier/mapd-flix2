@@ -249,3 +249,21 @@ test('Top 10: episódios mais citados nas questões dos desafios, em ordem decre
   for (const q of allQuizzes.flatMap((x) => x.questions)) for (const e of q.relatedEpisodes) counts.set(e, (counts.get(e) ?? 0) + 1);
   assert.equal(t[0].count, Math.max(...counts.values()));
 });
+
+test('slides: todo o conteúdo do episódio vira slides, na ordem pedagógica', async () => {
+  const { buildSlides, clampSlide } = await import('../../src/lib/slides.ts');
+  const { allEpisodes } = await import('../../src/data/catalog.ts');
+  for (const ep of allEpisodes) {
+    const s = buildSlides(ep, true);
+    const kinds = s.map((x) => x.kind);
+    assert.deepEqual(kinds.slice(0, 3), ['capa', 'pergunta', 'objetivos']);
+    assert.equal(kinds.at(-1), 'referencias');
+    assert.equal(kinds.at(-2), 'video');
+    assert.equal(kinds.filter((k) => k === 'questao').length, ep.activity.length);
+    assert.equal(kinds.filter((k) => k === 'bloco').length, ep.sections.reduce((n, sec) => n + sec.blocks.length, 0));
+    assert.equal(s.filter((x) => x.kind === 'conceitos').flatMap((x) => (x.kind === 'conceitos' ? x.terms : [])).length, ep.keyTerms.length);
+    assert.ok(!buildSlides(ep, false).some((x) => x.kind === 'video'));
+  }
+  assert.equal(clampSlide(-3, 10), 0);
+  assert.equal(clampSlide(99, 10), 9);
+});

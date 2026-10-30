@@ -22,6 +22,8 @@ Fotografias reais de cenas clínicas e laboratoriais (Unsplash, licença livre),
 
 Cada episódio segue o roteiro pedagógico: pergunta orientadora → objetivos → conceitos fundamentais → mecanismos → representação visual → aplicação clínica (cadeia *mecanismo → alteração funcional → lesão → manifestação → investigação → conduta*) → atividade com feedback → síntese → referências.
 
+**Ver em tela cheia:** em cada episódio, o botão “Ver em tela cheia” converte a rolagem em uma apresentação de slides (carrossel) — setas ← → ou botões Anterior/Próximo; “Voltar à navegação” (ou Esc) retorna ao modo rolagem.
+
 ## Executar localmente
 
 Requisitos: Node.js ≥ 22.18.
@@ -45,7 +47,7 @@ Se o navegador do Playwright não estiver instalado: `npx playwright install chr
 
 ## Publicar na Vercel
 
-Repositório: https://github.com/rodrigoniskier/mapd-flix2 — Site publicado: _ainda não publicado (importar o repositório na Vercel)_.
+Repositório: https://github.com/rodrigoniskier/mapd-flix2 — Site publicado: https://mapd-flix2.vercel.app/
 
 O projeto é estático (`dist/`). O arquivo `vercel.json` já define `npm run build` e `dist` como saída:
 

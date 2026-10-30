@@ -544,3 +544,67 @@ test('acessibilidade: axe-core sem violações WCAG 2.1 A/AA (inclui contraste) 
   fs.writeFileSync(path.join(OUT, 'axe.json'), JSON.stringify(found, null, 2));
   assert.deepEqual(found, []);
 });
+
+test('episódio: "Ver em tela cheia" vira slides e "Voltar à navegação" retorna ao modo rolagem', async () => {
+  const AXE = fs.readFileSync(path.join(root, 'tests', 'vendor', 'axe.min.js'), 'utf8');
+  const { page, errors } = await open('#/episodio/auto-e1-autotolerancia');
+  assert.equal(await page.locator('[data-testid="slideshow"]').count(), 0);
+  await page.click('[data-testid="ver-tela-cheia"]');
+  const show = page.locator('[data-testid="slideshow"]');
+  await show.waitFor();
+  const counter = page.locator('[data-testid="slide-contador"]');
+  const m = (await counter.innerText()).match(/Slide 1 de (\d+)/);
+  assert.ok(m && Number(m[1]) > 8, 'contador inicial');
+  const total = Number(m[1]);
+  // Teclado e botões.
+  await page.keyboard.press('ArrowRight');
+  assert.match(await counter.innerText(), /Slide 2 de/);
+  await page.keyboard.press('ArrowLeft');
+  assert.match(await counter.innerText(), /Slide 1 de/);
+  assert.equal(await page.locator('[data-testid="slide-anterior"]').isDisabled(), true);
+  // Percorre todos os slides: sem rolagem horizontal, responde à questão e roda o axe em cada um.
+  await page.addScriptTag({ content: AXE });
+  let answered = false;
+  const violations = [];
+  for (let i = 1; i <= total; i++) {
+    const hs = await page.evaluate(() => document.documentElement.scrollWidth > innerWidth + 1);
+    assert.equal(hs, false, `rolagem horizontal no slide ${i}`);
+    const radios = page.locator('[data-testid="slideshow"] [role="radio"]');
+    if (!answered && (await radios.count())) {
+      await radios.first().click();
+      await page.locator('[data-testid="slideshow"] [data-feedback]').waitFor();
+      answered = true;
+    }
+    await page.waitForTimeout(450); // fim da animação de entrada do slide
+    const v = await page.evaluate(async () =>
+      (await window.axe.run(document.querySelector('[data-testid="slideshow"]'), { runOnly: { type: 'tag', values: ['wcag2a', 'wcag2aa', 'wcag21a', 'wcag21aa'] } })).violations.map((x) => `${x.id} (${x.nodes.length})`),
+    );
+    for (const x of v) violations.push(`slide ${i}: ${x}`);
+    if (i < total) await page.click('[data-testid="slide-proximo"]');
+  }
+  assert.ok(answered, 'havia questão de fixação nos slides');
+  assert.deepEqual(violations, []);
+  assert.match(await counter.innerText(), new RegExp(`Slide ${total} de ${total}`));
+  assert.equal(await page.locator('[data-testid="slide-proximo"]').count(), 0);
+  // Voltar à navegação (botão) e por Esc.
+  await page.click('[data-testid="sair-slides"]');
+  assert.equal(await page.locator('[data-testid="slideshow"]').count(), 0);
+  assert.equal(await page.locator('h1').count(), 1);
+  await page.click('[data-testid="ver-tela-cheia"]');
+  await show.waitFor();
+  await page.keyboard.press('Escape');
+  assert.equal(await page.locator('[data-testid="slideshow"]').count(), 0);
+  assert.deepEqual(errors, []);
+  await page.close();
+  // Celular (página nova: a janela de teste fica em tela cheia nativa após o passo anterior).
+  const mobile = await open('#/episodio/auto-e1-autotolerancia', { width: 390, height: 844 });
+  const page2 = mobile.page;
+  const show2 = page2.locator('[data-testid="slideshow"]');
+  await page2.click('[data-testid="ver-tela-cheia"]');
+  await show2.waitFor();
+  assert.equal(await page2.evaluate(() => document.documentElement.scrollWidth > innerWidth + 1), false);
+  await page2.click('[data-testid="sair-slides"]');
+  assert.equal(await show2.count(), 0);
+  assert.deepEqual(mobile.errors, []);
+  await page2.close();
+});
