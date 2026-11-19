@@ -6,6 +6,18 @@ Interface no estilo dos serviços de streaming — fundo carvão, vermelho como 
 
 Fotografias reais de cenas clínicas e laboratoriais (Unsplash, licença livre), uma por série, episódio, caso e desafio, com créditos na página “Fontes”. O perfil do professor traz foto e dados do autor.
 
+## Problema, público e resultado
+
+**Problema.** Conteúdo denso de imunologia clínica pode ser difícil de acompanhar em formato tradicional.
+
+**Para quem.** Estudantes de Medicina que estudam Mecanismos de Agressão, Patológicos e de Defesa (MAPD).
+
+**O que entrega.** Plataforma com navegação inspirada em serviços de streaming: 3 séries, 19 episódios conceituais, 3 casos clínicos interativos de 7 etapas e 3 desafios de 12 questões, com marca, abertura e som originais.
+
+**Tecnologias.** React, TypeScript, Tailwind CSS, esbuild, Playwright, Vercel.
+
+**Qualidade e evidências.** 55 casos de teste unitário e de ponta a ponta no código (`npm test`); créditos das imagens na página Fontes. Este repositório não tem workflow de CI.
+
 ## O que há na versão 1.0
 
 | Item | Quantidade |
