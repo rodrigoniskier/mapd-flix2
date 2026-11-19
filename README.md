@@ -16,7 +16,7 @@ Fotografias reais de cenas clínicas e laboratoriais (Unsplash, licença livre),
 
 **Tecnologias.** React, TypeScript, Tailwind CSS, esbuild, Playwright, Vercel.
 
-**Qualidade e evidências.** 55 casos de teste unitário e de ponta a ponta no código (`npm test`); créditos das imagens na página Fontes. Este repositório não tem workflow de CI.
+**Qualidade e evidências.** 55 casos de teste unitário e de ponta a ponta no código (`npm test`); créditos das imagens na página Fontes. O CI roda typecheck, testes unitários e build a cada push; os testes de ponta a ponta rodam localmente. Licença MIT.
 
 ## O que há na versão 1.0
 
